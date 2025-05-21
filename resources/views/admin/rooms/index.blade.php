@@ -630,6 +630,14 @@
                                 <input type="text" id="roomName" name="name" class="form-control" required>
                             </div>
                             <div class="mb-3">
+                                <label for="guestName" class="form-label">Guest Name</label>
+                                <input type="text" id="guestName" name="guest_name" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea id="notes" name="notes" class="form-control"></textarea>
+                            </div>
+                            <div class="mb-3">
                                 <label for="roomCategory" class="form-label">Category</label>
                                 <select id="roomCategory" name="room_category_id" class="form-select" required>
                                     <!-- Options akan diisi melalui JavaScript -->
@@ -846,6 +854,8 @@
                     // Mengisi modal dengan data yang diterima
                     $('#updateRoomModalLabel').text(`Room : ${data.room.name}`);
                     $('#updateRoomModal #roomName').val(data.room.name);
+                    $('#updateRoomModal #guestName').val(data.trx ? data.trx.GuestName : '');
+                    $('#updateRoomModal #notes').val(data.trx ? data.trx.Notes : '');
                     $('#updateRoomModal #roomCategory').html(''); // Clear options sebelum mengisinya
                     data.categories.forEach(category => {
                         $('#updateRoomModal #roomCategory').append(`

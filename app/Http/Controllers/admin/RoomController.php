@@ -69,31 +69,74 @@ class RoomController extends Controller
     public function edit($id)
     {
         $room = Room::findOrFail($id);
-        $categories = RoomCategory::all(); // Jika Anda punya kategori ruangan
+        $categories = RoomCategory::all();
+
+        // Ambil trx terakhir yang belum checkout (CheckOutTime null)
+        $trx = \App\Models\TrxRoomDetail::where('RoomId', $room->roomId)
+            ->whereNull('CheckOutTime')
+            ->orderByDesc('TrxDate')
+            ->first();
+
         return response()->json([
             'room' => $room,
             'categories' => $categories,
+            'trx' => $trx,
         ]);
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:rooms,name,' . $id,
-            'room_category_id' => 'required|exists:room_categories,id',
-            'capacity' => 'required|integer|min:1',
-            'available' => 'required|integer',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:rooms,name,' . $id,
+        'room_category_id' => 'required|exists:room_categories,id',
+        'capacity' => 'required|integer|min:1',
+        'available' => 'required|integer',
+        'guest_name' => 'nullable|string|max:255',
+        'notes' => 'nullable|string|max:255',
+    ]);
 
-        $room = Room::findOrFail($id);
-        $room->update($request->all());
+    $room = Room::findOrFail($id);
+    $room->update($request->all());
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Room updated successfully.']);
+    $roomId = $room->roomId;
+    $status = (int) $request->available;
+
+    // Check-in (Guest/Host/Maintenance/OO)
+    if (in_array($status, [2, 4, 6])) {
+        $trx = \App\Models\TrxRoomDetail::where('RoomId', $roomId)
+            ->whereNull('CheckOutTime')
+            ->first();
+        if (!$trx) {
+            // Generate TrxId unik (varchar acak)
+            $trxId = 'TRX-' . strtoupper(bin2hex(random_bytes(8)));
+            \App\Models\TrxRoomDetail::create([
+                'TrxId' => $trxId,
+                'TrxDate' => now()->format('Y-m-d'),
+                'CheckInTime' => now(),
+                'RoomId' => $roomId,
+                'GuestName' => $request->guest_name,
+                'Notes' => $request->notes,
+            ]);
         }
-
-        return redirect()->back()->with('success', 'Room updated successfully.');
     }
+    // Check-out (Guest/Host/Maintenance/OO)
+    if (in_array($status, [3, 5, 7])) {
+        // Gunakan query builder agar tidak butuh primary key
+        \DB::table('TrxRoomDetail')
+            ->where('RoomId', $roomId)
+            ->whereNull('CheckOutTime')
+            ->update([
+                'CheckOutTime' => now(),
+                'GuestName' => $request->guest_name,
+                'Notes' => $request->notes,
+            ]);
+    }
+
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Room updated successfully.']);
+    }
+    return redirect()->back()->with('success', 'Room updated successfully.');
+}
 
 
 
