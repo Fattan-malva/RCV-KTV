@@ -13,11 +13,17 @@ class Room extends Model
     protected $table = 'rooms';
 
     // Mass assignable attributes
-    protected $fillable = ['name', 'roomId','room_category_id', 'capacity', 'available'];
+    protected $fillable = ['name', 'roomId', 'room_category_id', 'capacity', 'available'];
 
     // Relationship with RoomCategory model
     public function category()
     {
         return $this->belongsTo(RoomCategory::class, 'room_category_id');
+    }
+
+    public function currentTrx()
+    {
+        return $this->hasOne(\App\Models\TrxRoomDetail::class, 'RoomId', 'roomId')
+            ->whereNull('CheckOutTime');
     }
 }

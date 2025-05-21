@@ -29,7 +29,7 @@ class RoomController extends Controller
             $query->where('capacity', $request->capacity);
         }
 
-        $rooms = $query->with('category')->get();
+        $rooms = $query->with(['category', 'currentTrx'])->get();
         $categories = RoomCategory::all();
 
         $availableRoomCount = Room::whereIn('available', [1, 3, 5, 7])->count();
@@ -91,7 +91,7 @@ class RoomController extends Controller
         'room_category_id' => 'required|exists:room_categories,id',
         'capacity' => 'required|integer|min:1',
         'available' => 'required|integer',
-        'guest_name' => 'nullable|string|max:255',
+        'guest_name' => 'required|string|max:255',
         'notes' => 'nullable|string|max:255',
     ]);
 

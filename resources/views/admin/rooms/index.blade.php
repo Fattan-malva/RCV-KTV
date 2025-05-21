@@ -310,6 +310,12 @@
             font-size: 1.5rem;
         }
 
+        #roomStatusButtons .status-btn {
+            margin-right: 8px;
+            margin-bottom: 8px;
+            width: 50%;
+        }
+
         select.form-select option {
             font-size: 18px;
         }
@@ -591,8 +597,17 @@
                             <div class="room-card edit-room 
                                 {{ in_array($room->available, [1, 3, 5, 7]) ? 'available-room' : 'unavailable-room' }}"
                                 data-id="{{ $room->id }}">
-                                <i class="fas fa-door-closed room-icon"></i>
-                                <span class="room-name">{{ $room->name }}</span>
+                                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                    <div>
+                                        <i class="fas fa-door-closed room-icon"></i>
+                                        <span class="room-name">{{ $room->name }}</span>
+                                    </div>
+                                    @if($room->currentTrx && $room->currentTrx->GuestName)
+                                        <div style="font-size: 14px; font-weight: bold; margin-top: 4px;">
+                                            <i class="fa fa-user"></i> {{ $room->currentTrx->GuestName }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         @endif
                     @empty
@@ -616,7 +631,7 @@
         <!-- Modal Update -->
         <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form id="updateRoomForm" method="POST">
                         @csrf
@@ -625,42 +640,31 @@
                             <h5 class="modal-title" id="updateRoomModalLabel">Room</h5>
                         </div>
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="roomName" class="form-label">Name</label>
-                                <input type="text" id="roomName" name="name" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="guestName" class="form-label">Guest Name</label>
-                                <input type="text" id="guestName" name="guest_name" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label for="notes" class="form-label">Notes</label>
-                                <textarea id="notes" name="notes" class="form-control"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="roomCategory" class="form-label">Category</label>
-                                <select id="roomCategory" name="room_category_id" class="form-select" required>
-                                    <!-- Options akan diisi melalui JavaScript -->
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="roomCapacity" class="form-label">Capacity</label>
-                                <input type="number" id="roomCapacity" name="capacity" class="form-control" required>
-                            </div>
-                            <!-- <div class="mb-3">
-                                <label for="roomAvailable" class="form-label">Status</label>
-                               <select id="roomAvailable" name="available" class="form-select" required>
-                                    <option value="1" style="color: #358708; background-color: #E8FADF;">Open</option>
-                                    <option value="2" style="color: #358708; background-color: #E8FADF;">Host Check-in</option>
-                                    <option value="3" style="color: #dc3545; background-color: #ffe8e8;">Host Check-out</option>
-                                    <option value="4" style="color: #358708; background-color: #E8FADF;">Maintenance Check-in</option>
-                                    <option value="5" style="color: #dc3545; background-color: #ffe8e8;;">Maintenance Check-out</option>
-                                </select>
-                            </div> -->
-                            <div class="mb-3">
-                                <label class="form-label">Status</label>
-                                <div id="roomStatusButtons" class="d-flex gap-2"></div>
-                                <input type="hidden" id="roomAvailable" name="available" required>
+                            <div class="row">
+                                 <input type="hidden" id="roomName" name="name" required>
+                                <div class="mb-3 col-md-6">
+                                    <label for="guestName" class="form-label">Guest Name</label>
+                                    <input type="text" id="guestName" name="guest_name" class="form-control" required>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea id="notes" name="notes" class="form-control"></textarea>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="roomCategory" class="form-label">Category</label>
+                                    <select id="roomCategory" name="room_category_id" class="form-select" required>
+                                        <!-- Options akan diisi melalui JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="roomCapacity" class="form-label">Capacity</label>
+                                    <input type="number" id="roomCapacity" name="capacity" class="form-control" required>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Status</label>
+                                    <div id="roomStatusButtons" class="d-flex gap-2"></div>
+                                    <input type="hidden" id="roomAvailable" name="available" required>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -876,11 +880,11 @@
                         statusButtons.push({ val: 4, label: 'MNTC C-in', color: 'warning' });
                         statusButtons.push({ val: 6, label: 'OO C-in', color: 'secondary' });
                     } else if (status === 2) {
-                        statusButtons.push({ val: 3, label: 'Guest C-out', color: 'danger' });
+                        statusButtons.push({ val: 3, label: 'Guest Check-out', color: 'danger' });
                     } else if (status === 4) {
-                        statusButtons.push({ val: 5, label: 'MNTC C-out', color: 'danger' });
+                        statusButtons.push({ val: 5, label: 'MNTC Check-out', color: 'danger' });
                     } else if (status === 6) {
-                        statusButtons.push({ val: 7, label: 'OO C-out', color: 'danger' });
+                        statusButtons.push({ val: 7, label: 'OO Check-out', color: 'danger' });
                     }
 
                     // Render buttons
@@ -889,7 +893,7 @@
                     statusButtons.forEach(btn => {
                         $btnGroup.append(`
                 <button type="button" class="btn btn-outline-${btn.color} status-btn" data-value="${btn.val}">
-                    ${btn.label}
+                    <strong>${btn.label}</strong>
                 </button>
             `);
                     });
@@ -912,7 +916,7 @@
                 });
             });
 
-            // Event listener untuk form submit
+           // Event listener untuk form submit
             $('#updateRoomForm').on('submit', function (e) {
                 e.preventDefault();
 
@@ -920,7 +924,23 @@
                 const actionUrl = form.attr('action');
                 const formData = form.serialize();
 
-                // Disable the submit button to prevent double submission
+                // Ambil nilai status
+                const status = parseInt($('#updateRoomModal #roomAvailable').val());
+
+                // Validasi: jika tidak ada tombol status yang diklik (tidak ada .status-btn.active)
+                if ($('#updateRoomModal .status-btn.active').length === 0) {
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: false,
+                        html: 'Please select Check-in / Check-out status first!',
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return; // Stop form submission
+                }
+
                 const submitButton = form.find('button[type="submit"]');
                 submitButton.prop('disabled', true);
 
@@ -930,10 +950,7 @@
                     data: formData,
                     success: function (response) {
                         if (response.success) {
-                            // Simpan pesan di sessionStorage sebelum reload
                             sessionStorage.setItem('toastMessage', response.message);
-
-                            // Reload halaman
                             location.reload();
                         }
                     },
@@ -942,7 +959,6 @@
                         let errorMessage = '';
 
                         if (xhr.status === 422) {
-                            // Menangani kesalahan validasi
                             for (const field in errors) {
                                 errorMessage += `${errors[field][0]}<br>`;
                             }
@@ -954,10 +970,9 @@
                                 html: errorMessage,
                                 position: 'top',
                                 showConfirmButton: false,
-                                timer: 5000, // Duration of the toast in milliseconds
+                                timer: 5000,
                             });
                         } else {
-                            // Menangani kesalahan lain selain validasi
                             Swal.fire({
                                 toast: true,
                                 icon: 'error',
@@ -965,16 +980,16 @@
                                 text: 'An unexpected error occurred.',
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000, // Duration of the toast in milliseconds
+                                timer: 5000,
                             });
                         }
                     },
                     complete: function () {
-                        // Re-enable the submit button after the AJAX call is complete
                         submitButton.prop('disabled', false);
                     }
                 });
             });
+
 
             // Menampilkan toast jika ada pesan di sessionStorage setelah halaman di-reload
             const toastMessage = sessionStorage.getItem('toastMessage');
