@@ -1,0 +1,878 @@
+@extends('layouts.appAdmin')
+@section('header_title', 'Rooms-KTV')
+@section('content')
+    <style>
+        .card {
+            padding: 20px;
+            border: none;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .small {
+            padding: 15px 0px;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            flex: 1 1 calc(25% - 15px);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .small:hover {
+            transform: translateY(-5px);
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 6px 15px -3px;
+        }
+
+        .left-content {
+            flex: 1;
+            margin-right: 50px;
+        }
+
+        .left-content h5 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .left-content p {
+            margin: 5px 0 0;
+            font-size: 1rem;
+            color: #5c6bc0;
+        }
+
+        .right-content-available i {
+            color: #71DD37;
+            background-color: #E8FADF;
+            padding: 11px;
+            border-radius: 10%;
+            font-size: 2rem;
+            margin-left: 10px;
+        }
+
+        .right-content-unavailable i {
+            color: #FF3E1D;
+            background-color: #FFE0DB;
+            padding: 11px;
+            border-radius: 10%;
+            font-size: 2rem;
+            margin-left: 10px;
+        }
+
+        .right-content-guest i {
+            color: #696CFF;
+            background-color: #E7E7FF;
+            padding: 11px;
+            border-radius: 10%;
+            font-size: 2rem;
+            margin-left: -10px;
+        }
+
+        .right-content-profit i {
+            color: #FFAB00;
+            background-color: #FFF1D6;
+            padding: 7px 13px;
+            border-radius: 10%;
+            font-size: 2rem;
+            margin-left: 50px;
+        }
+
+
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .filter {
+            flex: 1 1 calc(25% - 20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+        }
+
+        .filter select {
+            width: 100%;
+            max-width: 250px;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+
+        .filter select:focus {
+            border: none;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            box-shadow: none;
+        }
+
+
+        .setting {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #696cff;
+            background-color: transparent;
+        }
+
+        .setting i {
+            transition: all 0.3s ease;
+        }
+
+        .setting i:hover {
+            transform: translateY(-2px);
+        }
+
+        .container-room {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .room-card {
+            display: inline-flex;
+            /* Ganti dengan inline-flex agar menyesuaikan panjang konten */
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            margin: 20px;
+            border: 4px solid #ddd;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            /* Menjaga teks tidak terpotong */
+        }
+
+
+        .room-card:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        .available-room {
+            background-color: #f8f9fa;
+            color: #696cff;
+            border-color: #f8f9fa;
+        }
+
+        .unavailable-room {
+            background-color: #ffe8e8;
+            border-color: #ffe8e8;
+            color: #dc3545;
+        }
+
+        .room-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .unavailable-room .room-icon {
+            color: #dc3545;
+        }
+
+        .room-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .card .room-card {
+            margin-bottom: 10px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+
+        .content.collapsed .card>div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            justify-content: flex-start;
+            transition: gap 0.3s ease;
+        }
+
+        .card>div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+            transition: gap 0.3s ease;
+        }
+
+        .offcanvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        #roomTab,
+        #categoryTab {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: none;
+            border: none;
+            color: #000;
+            padding: 5;
+            cursor: pointer;
+        }
+
+        #roomTab:hover,
+        #categoryTab:hover {
+            background-color: rgb(235, 236, 236);
+            color: #696cff;
+            border-radius: 5px;
+
+        }
+
+        #roomTab:focus,
+        #categoryTab:focus {
+            background-color: #696cff;
+            color: white;
+            border-color: #696cff;
+            border-radius: 5px;
+        }
+
+
+        .portrait-card {
+            height: 400px;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        #updateRoomModalLabel {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            font-size: 1.5rem;
+        }
+
+        select.form-select option {
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .room-card {
+                width: 150px;
+            }
+        }
+    </style>
+
+    <div class="container-content" style="margin-right: 25px;">
+        <!-- Row for Small Cards -->
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="card-container">
+                    <!-- Available Rooms Card -->
+                    <div class="card small">
+                        <div class="d-flex justify-content-between align-items-center" id="available-icon"
+                            data-availability="1">
+                            <div class="left-content">
+                                <h5>Available</h5>
+                                <p>{{ $availableRoomCount }} Rooms</p>
+                            </div>
+                            <div class="right-content-available">
+                                <i class="fas fa-couch" id="room-icon" data-availability="1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unavailable Rooms Card -->
+                    <div class="card small">
+                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
+                            data-availability="0">
+                            <div class="left-content">
+                                <h5>Unavailable</h5>
+                                <p>{{ $unavailableRoomCount }} Rooms</p>
+                            </div>
+                            <div class="right-content-unavailable">
+                                <i class="fas fa-couch" id="room-icon" data-availability="1"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guest Card -->
+                    <div class="card small">
+                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
+                            data-availability="0">
+                            <div class="left-content">
+                                <h5>Today's Guest</h5>
+                                <p>{{ $unavailableRoomCount }} Guests</p>
+                            </div>
+                            <div class="right-content-guest">
+                                <i class="fa-solid fa-user-group" id="unavailable-icon" data-availability="0"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profit Card -->
+                    <div class="card small">
+                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
+                            data-availability="0">
+                            <div class="left-content">
+                                <h5>Profit</h5>
+                                <p>{{ $unavailableRoomCount }}</p>
+                            </div>
+                            <div class="right-content-profit">
+                                <i class='bx bx-dollar' style="font-size:40px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Room -->
+        <h5>Search Filter</h5>
+        <form method="GET" action="{{ route('admin.rooms') }}" id="filter-form">
+            <div class="row">
+                <div class="col-8">
+                    <div class="filter-container mb-3">
+                        <div class="filter">
+                            <select name="category" id="room-category" class="form-select auto-submit">
+                                <option value="">Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter">
+                            <select name="availability" id="room-availability" class="form-select auto-submit">
+                                <option value="">Select Availability</option>
+                                <option value="available" {{ request('availability') == 'available' ? 'selected' : '' }}>
+                                    Available</option>
+                                <option value="unavailable" {{ request('availability') == 'unavailable' ? 'selected' : '' }}>
+                                    Unavailable</option>
+                            </select>
+                        </div>
+                        <div class="filter">
+                            <select name="capacity" id="room-capacity" class="form-select auto-submit">
+                                <option value="">Select Capacity</option>
+                                <option value="1" {{ request('capacity') == '1' ? 'selected' : '' }}>1 Guest</option>
+                                <option value="2" {{ request('capacity') == '2' ? 'selected' : '' }}>2 Guests</option>
+                                <option value="3" {{ request('capacity') == '3' ? 'selected' : '' }}>3 Guests</option>
+                                <option value="4" {{ request('capacity') == '4' ? 'selected' : '' }}>4 Guests</option>
+                            </select>
+                        </div>
+                        <div class="setting">
+                            <i class="fa-solid fa-arrows-rotate fa-xl" id="reset-button"></i>
+                        </div>
+                        <div class="setting" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateRoom"
+                            aria-controls="offcanvasCreateRoom" onclick="activateRoomTab()">
+                            <i class="fa-solid fa-gear fa-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Offcanvas for Creating Room -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateRoom"
+            aria-labelledby="offcanvasCreateRoomLabel">
+            <div class="offcanvas-header d-flex justify-content-between w-100">
+                <!-- Room Button -->
+                <button id="roomTab" type="button" onclick="showRoomForm()">Room</button>
+                <!-- Category Button -->
+                <button id="categoryTab" type="button" onclick="showCategoryForm()">Categories</button>
+            </div>
+
+            <div class="offcanvas-body">
+                <!-- Room Form -->
+                <div id="roomForm">
+                    <form action="{{ route('admin.rooms-store') }}" method="POST">
+                        @csrf
+                        <!-- Room Name Input -->
+                        <div class="mui-input-container">
+                            <input type="text" id="name" name="name" class="@error('name') is-invalid @enderror"
+                                placeholder=" " value="{{ old('name') }}" required />
+                            <label for="name">Room Number</label>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Category Select -->
+                        <div class="mui-input-container">
+                            <select class="mui-select @error('room_category_id') is-invalid @enderror" id="room_category_id"
+                                name="room_category_id" required>
+                                <option value="" disabled selected>Choose Category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('room_category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="room_category_id" class="form-label">Category</label>
+                            @error('room_category_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Availability Select -->
+                        <div class="mui-input-container">
+                            <select class="mui-select @error('capacity') is-invalid @enderror" id="capacity" name="capacity"
+                                required>
+                                <option value="" disabled selected>Choose Capacity</option>
+                                <option value="1" {{ old('capacity') == '1' ? 'selected' : '' }}>1 Guest</option>
+                                <option value="2" {{ old('capacity') == '2' ? 'selected' : '' }}>2 Guests</option>
+                                <option value="3" {{ old('capacity') == '3' ? 'selected' : '' }}>3 Guests</option>
+                                <option value="4" {{ old('capacity') == '4' ? 'selected' : '' }}>4 Guests</option>
+                            </select>
+                            <label for="capacity" class="form-label">Capacity</label>
+                            @error('capacity')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" name="create_another" value="1" class="btn btn-secondary">Create &
+                                Another</button>
+                            <button type="button" class="btn btn-danger btn-label-danger" data-bs-dismiss="offcanvas"
+                                aria-label="Close">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Category Form (Initially Hidden) -->
+                <div id="categoryForm" style="display: none;">
+                    <form action="{{ route('admin.categories-store') }}" method="POST">
+                        @csrf
+                        <!-- Category Name Input -->
+                        <div class="mui-input-container">
+                            <input type="text" id="name" name="name" class="@error('name') is-invalid @enderror"
+                                placeholder=" " value="{{ old('name') }}" required />
+                            <label for="name">Categories Name</label>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Description Input -->
+                        <div class="mui-input-container">
+                            <input type="text" id="description" name="description"
+                                class="@error('description') is-invalid @enderror" placeholder=" "
+                                value="{{ old('description') }}" required />
+                            <label for="description">Description</label>
+                            @error('description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" name="create_another" value="1" class="btn btn-secondary">Create &
+                                Another</button>
+                            <button type="button" class="btn btn-danger btn-label-danger" data-bs-dismiss="offcanvas"
+                                aria-label="Close">Cancel</button>
+                        </div>
+                    </form>
+
+                    <!-- Display Existing Categories Below the Buttons -->
+                    <div class="mt-4">
+                        <h5>Existing Categories</h5>
+                        @if($categories->isEmpty())
+                            <p>No categories found.</p>
+                        @else
+                            <ul class="list-group">
+                                @foreach($categories as $category)
+                                    <li class="list-group-item">
+                                        <strong>- {{ $category->name }}</strong>
+                                        <!-- Delete Button with Icon -->
+                                        <form action="{{ route('admin.categories-destroy', $category->id) }}" method="POST"
+                                            class="d-inline-block float-end">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Room Card -->
+        <div class="card container-room mb-4">
+            <div>
+                @forelse($rooms as $room)
+                    @if(in_array($room->available, [1, 3, 5, 2, 4]))
+                        <div class="room-card edit-room 
+                            {{ in_array($room->available, [1, 3, 5]) ? 'available-room' : 'unavailable-room' }}"
+                            data-id="{{ $room->id }}">
+                            <i class="fas fa-door-closed room-icon"></i>
+                            <span class="room-name">{{ $room->name }}</span>
+                        </div>
+                    @endif
+                @empty
+                    <p>No rooms available based on the selected filters.</p>
+                @endforelse
+            </div>
+            <div class="legend" style="margin-top: 30%;">
+                <div class="room-card available-room">
+                    <i class="fas fa-door-closed room-icon"></i>
+                    <span class="room-name">Available</span>
+                </div>
+                <div class="room-card unavailable-room">
+                    <i class="fas fa-door-closed room-icon"></i>
+                    <span class="room-name">Unavailable</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Update -->
+        <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="updateRoomForm" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateRoomModalLabel">Room</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="roomName" class="form-label">Name</label>
+                                <input type="text" id="roomName" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomCategory" class="form-label">Category</label>
+                                <select id="roomCategory" name="room_category_id" class="form-select" required>
+                                    <!-- Options akan diisi melalui JavaScript -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomCapacity" class="form-label">Capacity</label>
+                                <input type="number" id="roomCapacity" name="capacity" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="roomAvailable" class="form-label">Status</label>
+                               <select id="roomAvailable" name="available" class="form-select" required>
+                                    <option value="1" style="color: #358708; background-color: #E8FADF;">Open</option>
+                                    <option value="2" style="color: #358708; background-color: #E8FADF;">Host Check-in</option>
+                                    <option value="3" style="color: #dc3545; background-color: #ffe8e8;">Host Check-out</option>
+                                    <option value="4" style="color: #358708; background-color: #E8FADF;">Maintenance Check-in</option>
+                                    <option value="5" style="color: #dc3545; background-color: #ffe8e8;;">Maintenance Check-out</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-label-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Portrait Cards -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card portrait-card">
+                    <h5>Portrait 1</h5>
+                    <p>Content for portrait 1.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card portrait-card">
+                    <h5>Portrait 2</h5>
+                    <p>Content for portrait 2.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card portrait-card">
+                    <h5>Portrait 3</h5>
+                    <p>Content for portrait 3.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JS Offcanvas -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the elements
+            const roomForm = document.getElementById('roomForm');
+            const categoryForm = document.getElementById('categoryForm');
+            const roomTab = document.getElementById('roomTab');
+            const categoryTab = document.getElementById('categoryTab');
+            const offcanvasElement = document.getElementById('offcanvasCreateRoom');
+
+            // Function to activate Room Tab
+            function activateRoomTab() {
+                roomTab.classList.add('active'); // Activate Room Tab
+                categoryTab.classList.remove('active'); // Deactivate Category Tab
+                roomForm.style.display = 'block'; // Show Room Form
+                categoryForm.style.display = 'none'; // Hide Category Form
+                roomTab.focus(); // Focus on Room Tab
+            }
+
+            // Event listener to show Room Form when Room Tab is clicked
+            roomTab.addEventListener('click', function () {
+                activateRoomTab();
+            });
+
+            // Show Category Form when Category Tab is clicked
+            categoryTab.addEventListener('click', function () {
+                categoryTab.classList.add('active'); // Activate Category Tab
+                roomTab.classList.remove('active'); // Deactivate Room Tab
+                roomForm.style.display = 'none'; // Hide Room Form
+                categoryForm.style.display = 'block'; // Show Category Form
+                categoryTab.focus(); // Focus on Category Tab
+            });
+
+            // Ensure Room Tab is active when offcanvas is opened
+            offcanvasElement.addEventListener('shown.bs.offcanvas', function () {
+                activateRoomTab();
+            });
+
+            // Handle validation errors and success messages
+            @if ($errors->any())
+                var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                offcanvas.show(); // Show offcanvas on error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    text: '{{ $errors->first() }}',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                // Ensure Category Tab is selected if there are validation errors
+                categoryTab.classList.add('active'); // Activate Category Tab
+                roomTab.classList.remove('active'); // Deactivate Room Tab
+                roomForm.style.display = 'none'; // Hide Room Form
+                categoryForm.style.display = 'block'; // Show Category Form
+            @endif
+
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                if ("{{ session('create_another') }}") {
+                    // Ensure offcanvas remains open if 'create_another' is set
+                    var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                    offcanvas.show();
+                    // Ensure Category Tab is shown if creating another category
+                    categoryTab.classList.add('active');
+                    roomTab.classList.remove('active');
+                    roomForm.style.display = 'none';
+                    categoryForm.style.display = 'block';
+                } else {
+                    var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                    offcanvas.hide();
+                }
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Deletion Failed!',
+                    text: '{{ session('error') }}',
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                // Keep offcanvas open when there is a deletion failure
+                var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                offcanvas.show();
+                // Ensure Category Tab remains active when deletion fails
+                categoryTab.classList.add('active');
+                roomTab.classList.remove('active');
+                roomForm.style.display = 'none';
+                categoryForm.style.display = 'block';
+            @endif
+        });
+    </script>
+
+    <!-- JS Filter -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const autoSubmitElements = document.querySelectorAll('.auto-submit');
+            autoSubmitElements.forEach(function (element) {
+                element.addEventListener('change', function () {
+                    document.getElementById('filter-form').submit();
+                });
+            });
+        });
+        document.getElementById('reset-button').addEventListener('click', function () {
+            document.querySelectorAll('#filter-form select').forEach(function (select) {
+                select.value = '';
+            });
+            document.getElementById('filter-form').submit();
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const availableIcon = document.getElementById('available-icon');
+            const unavailableIcon = document.getElementById('unavailable-icon');
+
+            if (availableIcon) {
+                availableIcon.addEventListener('click', function () {
+                    // Set filter ke "available"
+                    document.getElementById('room-availability').value = 'available';
+                    document.getElementById('filter-form').submit();
+                });
+            }
+
+            if (unavailableIcon) {
+                unavailableIcon.addEventListener('click', function () {
+                    // Set filter ke "unavailable"
+                    document.getElementById('room-availability').value = 'unavailable';
+                    document.getElementById('filter-form').submit();
+                });
+            }
+        });
+    </script>
+    <!-- JS Room Modal Update -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Event listener untuk tombol edit room
+            $('.edit-room').on('click', function () {
+                const roomId = $(this).data('id');
+                const url = `/rooms/${roomId}/edit`;
+
+                // Mengambil data room dan kategori dari server
+                $.get(url, function (data) {
+                    // Mengisi modal dengan data yang diterima
+                    $('#updateRoomModalLabel').text(`Room : ${data.room.name}`);
+                    $('#updateRoomModal #roomName').val(data.room.name);
+                    $('#updateRoomModal #roomCategory').html(''); // Clear options sebelum mengisinya
+                    data.categories.forEach(category => {
+                        $('#updateRoomModal #roomCategory').append(`
+                    <option value="${category.id}" ${data.room.room_category_id == category.id ? 'selected' : ''}>
+                        ${category.name}
+                    </option>
+                `);
+                    });
+                    $('#updateRoomModal #roomCapacity').val(data.room.capacity);
+                    $('#updateRoomModal #roomAvailable').val(data.room.available);
+                    $('#updateRoomForm').attr('action', `/rooms/${roomId}`);
+                    $('#updateRoomModal').modal('show'); // Show modal
+                });
+            });
+
+            // Event listener untuk form submit
+            $('#updateRoomForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const actionUrl = form.attr('action');
+                const formData = form.serialize();
+
+                // Disable the submit button to prevent double submission
+                const submitButton = form.find('button[type="submit"]');
+                submitButton.prop('disabled', true);
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            // Simpan pesan di sessionStorage sebelum reload
+                            sessionStorage.setItem('toastMessage', response.message);
+
+                            // Reload halaman
+                            location.reload();
+                        }
+                    },
+                    error: function (xhr) {
+                        const errors = xhr.responseJSON.errors || {};
+                        let errorMessage = '';
+
+                        if (xhr.status === 422) {
+                            // Menangani kesalahan validasi
+                            for (const field in errors) {
+                                errorMessage += `${errors[field][0]}<br>`;
+                            }
+
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                title: false,
+                                html: errorMessage,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 5000, // Duration of the toast in milliseconds
+                            });
+                        } else {
+                            // Menangani kesalahan lain selain validasi
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An unexpected error occurred.',
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000, // Duration of the toast in milliseconds
+                            });
+                        }
+                    },
+                    complete: function () {
+                        // Re-enable the submit button after the AJAX call is complete
+                        submitButton.prop('disabled', false);
+                    }
+                });
+            });
+
+            // Menampilkan toast jika ada pesan di sessionStorage setelah halaman di-reload
+            const toastMessage = sessionStorage.getItem('toastMessage');
+            if (toastMessage) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    title: toastMessage,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 1000, // Duration of the toast in milliseconds
+                }).then(() => {
+                    // Hapus pesan dari sessionStorage setelah menampilkannya
+                    sessionStorage.removeItem('toastMessage');
+                });
+            }
+        });
+    </script>
+
+@endsection
