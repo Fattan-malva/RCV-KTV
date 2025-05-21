@@ -31,6 +31,7 @@
             box-sizing: border-box;
             font-family: 'Arial';
         }
+
         /* 'Comic Sans MS', 'Comic Sans', cursive; */
 
         body {
@@ -38,6 +39,17 @@
             background-color: #F5F5F9;
         }
 
+body, html {
+    overflow-y: auto;
+}
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+    display: none !important;
+}
+body, html {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
 
         h1,
         h2,

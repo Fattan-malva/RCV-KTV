@@ -143,20 +143,20 @@
         }
 
         .room-card {
-            display: inline-flex;
-            /* Ganti dengan inline-flex agar menyesuaikan panjang konten */
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+            width: 140px;         /* Static width */
+            height: 85px;        /* Static height */
             padding: 10px;
-            margin: 10px;
+            margin: 5px;
             border: 4px solid #ddd;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
             border-radius: 8px;
-            text-align: center;
+            text-align: left;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            white-space: nowrap;
-            /* Menjaga teks tidak terpotong */
         }
 
         .room-name {
@@ -247,7 +247,7 @@
         .content.collapsed .card>div {
             display: flex;
             flex-wrap: wrap;
-            gap: 2px;
+            gap: 15px;
             justify-content: flex-start;
             transition: gap 0.3s ease;
         }
@@ -255,7 +255,7 @@
         .card>div {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 10px;
             justify-content: flex-start;
             transition: gap 0.3s ease;
         }
@@ -313,7 +313,17 @@
         #roomStatusButtons .status-btn {
             margin-right: 8px;
             margin-bottom: 8px;
-            width: 50%;
+            width: 100%;
+            padding: 20px 40px;
+            white-space: nowrap; 
+            border-width: 3px !important;
+        }
+        select.form-select:disabled {
+            background-color: #fff !important;   
+            color: #212529 !important;           
+            opacity: 1 !important;               
+            cursor: not-allowed;                 
+            border-color: #ced4da;              
         }
 
         select.form-select option {
@@ -603,7 +613,7 @@
                                         <span class="room-name">{{ $room->name }}</span>
                                     </div>
                                     @if($room->currentTrx && $room->currentTrx->GuestName)
-                                        <div style="font-size: 14px; font-weight: bold; margin-top: 4px;">
+                                        <div style="font-size: 12px; font-weight: bold; margin-top: 4px; text-align: center;">
                                             <i class="fa fa-user"></i> {{ $room->currentTrx->GuestName }}
                                         </div>
                                     @endif
@@ -652,13 +662,14 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="roomCategory" class="form-label">Category</label>
-                                    <select id="roomCategory" name="room_category_id" class="form-select" required>
+                                    <select id="roomCategory" name="room_category_id" class="form-select" required disabled>
                                         <!-- Options akan diisi melalui JavaScript -->
                                     </select>
+                                    <input type="hidden" id="roomCategoryHidden" name="room_category_id">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="roomCapacity" class="form-label">Capacity</label>
-                                    <input type="number" id="roomCapacity" name="capacity" class="form-control" required>
+                                    <input type="number" id="roomCapacity" name="capacity" class="form-control" required readonly>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Status</label>
@@ -869,6 +880,7 @@
                 `);
                     });
                     $('#updateRoomModal #roomCapacity').val(data.room.capacity);
+                    $('#updateRoomModal #roomCategoryHidden').val(data.room.room_category_id);
 
                     // Status Button Logic
                     const status = parseInt(data.room.available);
@@ -876,9 +888,9 @@
                     // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out, 6=OO Check-in, 7=OO Check-out
                     if ([1, 3, 5, 7].includes(status)) {
                         statusButtons.push({ val: 1, label: 'Open', color: 'success' });
-                        statusButtons.push({ val: 2, label: 'Guest C-in', color: 'primary' });
-                        statusButtons.push({ val: 4, label: 'MNTC C-in', color: 'warning' });
-                        statusButtons.push({ val: 6, label: 'OO C-in', color: 'secondary' });
+                        statusButtons.push({ val: 2, label: 'Guest Check-in', color: 'primary' });
+                        statusButtons.push({ val: 4, label: 'MNTC Check-in', color: 'warning' });
+                        statusButtons.push({ val: 6, label: 'OO Check-in', color: 'secondary' });
                     } else if (status === 2) {
                         statusButtons.push({ val: 3, label: 'Guest Check-out', color: 'danger' });
                     } else if (status === 4) {

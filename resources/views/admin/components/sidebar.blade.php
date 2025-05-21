@@ -113,6 +113,7 @@
         justify-content: center;
         align-items: center;
         height: 100px;
+        cursor: pointer;
     }
 
     .sidebar .logo-text {
@@ -147,13 +148,14 @@
         display: block;
         text-align: center;
     }
+    
 </style>
 <!-- Sidebar -->
 <div id="sidebar" class="sidebar text-white">
     <!-- Logo -->
     <div class="logo">
         <!-- <img src="{{ asset('img/logoBadmin.png') }}" alt="Logo"> -->
-        <h1 class="logo-text">BfashKara RCP</h1>
+        <h1 class="logo-text" id="toggleSidebar">BfashKara RCP</h1>
     </div>
 
     <!-- Menu Items -->
@@ -186,3 +188,26 @@
     <a href="#" class="text-white"><i class="fas fa-cog"></i><br>Settings</a>
     <a href="#" class="text-white"><i class="fas fa-chart-bar"></i><br>Reports</a>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebarCollapsedKey = "sidebar-collapsed";
+
+        // Set initial state from localStorage
+        const isCollapsed = localStorage.getItem(sidebarCollapsedKey) === "true";
+        if (isCollapsed) {
+            sidebar.classList.add('collapsed');
+            if (content) content.classList.add('collapsed');
+        }
+
+        toggleBtn.addEventListener('click', function () {
+            const collapsed = sidebar.classList.toggle('collapsed');
+            if (content) content.classList.toggle('collapsed');
+            localStorage.setItem(sidebarCollapsedKey, collapsed);
+        });
+    });
+</script>
+

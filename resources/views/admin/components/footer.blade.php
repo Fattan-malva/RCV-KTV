@@ -9,5 +9,5 @@
 
 <!-- Footer -->
 <div class="footer">
-    <span>&copy; 2024 Admin Dashboard. All Rights Reserved.</span>
+    <span>&copy; 2025 EDP Developer BFashion. All Rights Reserved.</span>
 </div>
