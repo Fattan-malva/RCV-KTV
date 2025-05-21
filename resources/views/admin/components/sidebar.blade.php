@@ -121,8 +121,8 @@
         border-color: #696cff;
         box-shadow: 0 .125rem .25rem #696cff66;
         border-radius: 5px;
-        padding: 5px 65px;
-        font-size: 1.5rem;
+        padding: 5px 25px;
+        font-size: 25px;
         white-space: nowrap;
         overflow: hidden;
         width: fit-content;
@@ -153,7 +153,7 @@
     <!-- Logo -->
     <div class="logo">
         <!-- <img src="{{ asset('img/logoBadmin.png') }}" alt="Logo"> -->
-        <h1 class="logo-text">B-admin</h1>
+        <h1 class="logo-text">BfashKara RCP</h1>
     </div>
 
     <!-- Menu Items -->

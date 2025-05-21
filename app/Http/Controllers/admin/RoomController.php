@@ -9,34 +9,36 @@ use App\Models\RoomCategory;
 use Illuminate\Http\Request;
 class RoomController extends Controller
 {
-   public function index(Request $request)
-{
-    $query = Room::query();
+    public function index(Request $request)
+    {
+        $query = Room::query();
 
-    if ($request->has('category') && $request->category != '') {
-        $query->where('room_category_id', $request->category);
-    }
-
-    if ($request->has('availability') && $request->availability != '') {
-        if ($request->availability == 'available') {
-            $query->whereIn('available', [1, 3, 5]);
-        } elseif ($request->availability == 'unavailable') {
-            $query->whereIn('available', [2, 4]);
+        if ($request->has('category') && $request->category != '') {
+            $query->where('room_category_id', $request->category);
         }
+
+        if ($request->has('availability') && $request->availability != '') {
+            if ($request->availability == 'available') {
+                $query->whereIn('available', [1, 3, 5]);
+            } elseif ($request->availability == 'unavailable') {
+                $query->whereIn('available', [2, 4]);
+            }
+        }
+
+        if ($request->has('capacity') && $request->capacity != '') {
+            $query->where('capacity', $request->capacity);
+        }
+
+        $rooms = $query->with('category')->get();
+        $categories = RoomCategory::all();
+
+        $availableRoomCount = Room::whereIn('available', [1, 3, 5])->count();
+        $unavailableRoomCount = Room::whereIn('available', [2, 4])->count();
+        $allRoomCount = Room::count();
+
+
+        return view('admin.rooms.index', compact('rooms', 'categories', 'availableRoomCount', 'unavailableRoomCount', 'allRoomCount'));
     }
-
-    if ($request->has('capacity') && $request->capacity != '') {
-        $query->where('capacity', $request->capacity);
-    }
-
-    $rooms = $query->with('category')->get();
-    $categories = RoomCategory::all();
-
-    $availableRoomCount = Room::whereIn('available', [1, 3, 5])->count();
-    $unavailableRoomCount = Room::whereIn('available', [2, 4])->count();
-
-    return view('admin.rooms.index', compact('rooms', 'categories', 'availableRoomCount', 'unavailableRoomCount'));
-}
 
 
 
@@ -50,6 +52,7 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'roomId' => 'required|string|unique:rooms,roomId',
             'name' => 'required|unique:rooms',
             'room_category_id' => 'required|exists:room_categories,id',
             'capacity' => 'required|integer|min:1',

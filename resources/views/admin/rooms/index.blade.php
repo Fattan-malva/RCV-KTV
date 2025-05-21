@@ -74,13 +74,13 @@
             margin-left: -10px;
         }
 
-        .right-content-profit i {
+        .right-content-allroom i {
             color: #FFAB00;
             background-color: #FFF1D6;
             padding: 7px 13px;
             border-radius: 10%;
             font-size: 2rem;
-            margin-left: 50px;
+            margin-left: -10px;
         }
 
 
@@ -147,8 +147,8 @@
             /* Ganti dengan inline-flex agar menyesuaikan panjang konten */
             align-items: center;
             justify-content: flex-start;
-            padding: 20px;
-            margin: 20px;
+            padding: 10px;
+            margin: 10px;
             border: 4px solid #ddd;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
             border-radius: 8px;
@@ -157,6 +157,11 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             white-space: nowrap;
             /* Menjaga teks tidak terpotong */
+        }
+
+        .room-name {
+            font-size: 20px;
+            font-weight: bold;
         }
 
 
@@ -186,11 +191,6 @@
             color: #dc3545;
         }
 
-        .room-name {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
         .card .room-card {
             margin-bottom: 10px;
         }
@@ -201,6 +201,48 @@
             margin-bottom: 20px;
         }
 
+        .legend-card {
+            display: inline-flex;
+            /* Ganti dengan inline-flex agar menyesuaikan panjang konten */
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid #ddd;
+            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            /* Menjaga teks tidak terpotong */
+        }
+
+        .legend-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .available-legend {
+            background-color: #f8f9fa;
+            color: #696cff;
+            border-color: #f8f9fa;
+        }
+
+        .unavailable-legend {
+            background-color: #ffe8e8;
+            border-color: #ffe8e8;
+            color: #dc3545;
+        }
+
+        .legend-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .legend-card:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
 
         .content.collapsed .card>div {
             display: flex;
@@ -254,6 +296,7 @@
 
 
         .portrait-card {
+            display: none;
             height: 400px;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
             padding: 15px;
@@ -283,6 +326,19 @@
         <div class="row">
             <div class="col-12 mb-3">
                 <div class="card-container">
+                     <!-- All Room Card -->
+                    <div class="card small" id="reset-button">
+                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
+                            data-availability="0">
+                            <div class="left-content">
+                                <h5>All Rooms</h5>
+                                <p>{{ $allRoomCount }}</p>
+                            </div>
+                            <div class="right-content-allroom">
+                                <i class="fas fa-hotel" id="unavailable-icon" data-availability="0"></i>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Available Rooms Card -->
                     <div class="card small">
                         <div class="d-flex justify-content-between align-items-center" id="available-icon"
@@ -302,7 +358,7 @@
                         <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
                             data-availability="0">
                             <div class="left-content">
-                                <h5>Unavailable</h5>
+                                <h5>Used</h5>
                                 <p>{{ $unavailableRoomCount }} Rooms</p>
                             </div>
                             <div class="right-content-unavailable">
@@ -316,25 +372,11 @@
                         <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
                             data-availability="0">
                             <div class="left-content">
-                                <h5>Today's Guest</h5>
+                                <h5>Room Today's</h5>
                                 <p>{{ $unavailableRoomCount }} Guests</p>
                             </div>
                             <div class="right-content-guest">
                                 <i class="fa-solid fa-user-group" id="unavailable-icon" data-availability="0"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Profit Card -->
-                    <div class="card small">
-                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
-                            data-availability="0">
-                            <div class="left-content">
-                                <h5>Profit</h5>
-                                <p>{{ $unavailableRoomCount }}</p>
-                            </div>
-                            <div class="right-content-profit">
-                                <i class='bx bx-dollar' style="font-size:40px;"></i>
                             </div>
                         </div>
                     </div>
@@ -343,14 +385,14 @@
         </div>
 
         <!-- Filter Room -->
-        <h5>Search Filter</h5>
+        <!-- <h5>Search Filter</h5> -->
         <form method="GET" action="{{ route('admin.rooms') }}" id="filter-form">
-            <div class="row">
+            <div class="row" style="display: none;">
                 <div class="col-8">
                     <div class="filter-container mb-3">
                         <div class="filter">
                             <select name="category" id="room-category" class="form-select auto-submit">
-                                <option value="">Select Category</option>
+                                <option value="">All Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -360,7 +402,7 @@
                         </div>
                         <div class="filter">
                             <select name="availability" id="room-availability" class="form-select auto-submit">
-                                <option value="">Select Availability</option>
+                                <option value="">All Availability</option>
                                 <option value="available" {{ request('availability') == 'available' ? 'selected' : '' }}>
                                     Available</option>
                                 <option value="unavailable" {{ request('availability') == 'unavailable' ? 'selected' : '' }}>
@@ -369,7 +411,7 @@
                         </div>
                         <div class="filter">
                             <select name="capacity" id="room-capacity" class="form-select auto-submit">
-                                <option value="">Select Capacity</option>
+                                <option value="">All Capacity</option>
                                 <option value="1" {{ request('capacity') == '1' ? 'selected' : '' }}>1 Guest</option>
                                 <option value="2" {{ request('capacity') == '2' ? 'selected' : '' }}>2 Guests</option>
                                 <option value="3" {{ request('capacity') == '3' ? 'selected' : '' }}>3 Guests</option>
@@ -403,6 +445,16 @@
                 <div id="roomForm">
                     <form action="{{ route('admin.rooms-store') }}" method="POST">
                         @csrf
+                        <!-- RoomId Input -->
+                        <div class="mui-input-container">
+                            <input type="text" id="roomId" name="roomId" class="@error('roomId') is-invalid @enderror"
+                                placeholder=" " value="{{ old('roomId') }}" required />
+                            <label for="roomId">Room ID</label>
+                            @error('roomId')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <!-- Room Name Input -->
                         <div class="mui-input-container">
                             <input type="text" id="name" name="name" class="@error('name') is-invalid @enderror"
@@ -524,28 +576,38 @@
 
         <!-- Room Card -->
         <div class="card container-room mb-4">
-            <div>
-                @forelse($rooms as $room)
-                    @if(in_array($room->available, [1, 3, 5, 2, 4]))
-                        <div class="room-card edit-room 
-                            {{ in_array($room->available, [1, 3, 5]) ? 'available-room' : 'unavailable-room' }}"
-                            data-id="{{ $room->id }}">
-                            <i class="fas fa-door-closed room-icon"></i>
-                            <span class="room-name">{{ $room->name }}</span>
-                        </div>
-                    @endif
-                @empty
-                    <p>No rooms available based on the selected filters.</p>
-                @endforelse
-            </div>
-            <div class="legend" style="margin-top: 30%;">
-                <div class="room-card available-room">
-                    <i class="fas fa-door-closed room-icon"></i>
-                    <span class="room-name">Available</span>
+            @php
+                $groupedRooms = $rooms->groupBy(function($room) {
+                    return $room->category ? $room->category->name : 'Uncategorized';
+                });
+            @endphp
+
+            @foreach($groupedRooms as $categoryName => $categoryRooms)
+                <h4 class="mb-4 mt-4">{{ $categoryName }} ROOM</h4>
+                <div>
+                    @forelse($categoryRooms as $room)
+                        @if(in_array($room->available, [1, 3, 5, 2, 4]))
+                            <div class="room-card edit-room 
+                                {{ in_array($room->available, [1, 3, 5]) ? 'available-room' : 'unavailable-room' }}"
+                                data-id="{{ $room->id }}">
+                                <i class="fas fa-door-closed room-icon"></i>
+                                <span class="room-name">{{ $room->name }}</span>
+                            </div>
+                        @endif
+                    @empty
+                        <p>No rooms available based on the selected filters.</p>
+                    @endforelse
                 </div>
-                <div class="room-card unavailable-room">
-                    <i class="fas fa-door-closed room-icon"></i>
-                    <span class="room-name">Unavailable</span>
+            @endforeach
+
+            <div class="legend" style="margin-top: 10%;">
+                <div class="legend-card available-legend">
+                    <i class="fas fa-door-closed legend-icon"></i>
+                    <span class="legend-name">Available</span>
+                </div>
+                <div class="legend-card unavailable-legend">
+                    <i class="fas fa-door-closed legend-icon"></i>
+                    <span class="legend-name">Used</span>
                 </div>
             </div>
         </div>
@@ -576,7 +638,7 @@
                                 <label for="roomCapacity" class="form-label">Capacity</label>
                                 <input type="number" id="roomCapacity" name="capacity" class="form-control" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="roomAvailable" class="form-label">Status</label>
                                <select id="roomAvailable" name="available" class="form-select" required>
                                     <option value="1" style="color: #358708; background-color: #E8FADF;">Open</option>
@@ -585,6 +647,11 @@
                                     <option value="4" style="color: #358708; background-color: #E8FADF;">Maintenance Check-in</option>
                                     <option value="5" style="color: #dc3545; background-color: #ffe8e8;;">Maintenance Check-out</option>
                                 </select>
+                            </div> -->
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <div id="roomStatusButtons" class="d-flex gap-2"></div>
+                                <input type="hidden" id="roomAvailable" name="available" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -787,9 +854,50 @@
                 `);
                     });
                     $('#updateRoomModal #roomCapacity').val(data.room.capacity);
-                    $('#updateRoomModal #roomAvailable').val(data.room.available);
+
+                    // Status Button Logic
+                    const status = parseInt(data.room.available);
+                    const statusButtons = [];
+                    // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out
+                    if ([1, 5, 3].includes(status)) {
+                        // Show Open, Host Check-in, Maintenance Check-in
+                        statusButtons.push({ val: 1, label: 'Open', color: 'success' });
+                        statusButtons.push({ val: 2, label: 'Host Check-in', color: 'primary' });
+                        statusButtons.push({ val: 4, label: 'Maintenance Check-in', color: 'warning' });
+                    } else if (status === 2) {
+                        // Show Host Check-out only
+                        statusButtons.push({ val: 3, label: 'Host Check-out', color: 'danger' });
+                    } else if (status === 4) {
+                        // Show Maintenance Check-out only
+                        statusButtons.push({ val: 5, label: 'Maintenance Check-out', color: 'danger' });
+                    }
+
+                    // Render buttons
+                    const $btnGroup = $('#roomStatusButtons');
+                    $btnGroup.empty();
+                    statusButtons.forEach(btn => {
+                        $btnGroup.append(`
+                <button type="button" class="btn btn-outline-${btn.color} status-btn" data-value="${btn.val}">
+                    ${btn.label}
+                </button>
+            `);
+                    });
+
+                    // Set initial value
+                    $('#updateRoomModal #roomAvailable').val(status);
+
+                    // Button click event
+                    $('.status-btn').off('click').on('click', function () {
+                        $('.status-btn').removeClass('active');
+                        $(this).addClass('active');
+                        $('#updateRoomModal #roomAvailable').val($(this).data('value'));
+                    });
+
+                    // Set active button
+                    $(`.status-btn[data-value="${status}"]`).addClass('active');
+
                     $('#updateRoomForm').attr('action', `/rooms/${roomId}`);
-                    $('#updateRoomModal').modal('show'); // Show modal
+                    $('#updateRoomModal').modal('show');
                 });
             });
 

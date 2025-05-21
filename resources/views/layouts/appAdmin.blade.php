@@ -75,7 +75,7 @@
             padding: 20px;
             border-radius: 10px;
             margin-left: 305px;
-            margin-top: 90px;
+            margin-top: -9px;
             width: calc(100% - 305px);
             z-index: 998;
             transition: margin-left 0.5s ease, left 0.5s ease, width 0.5s ease;
@@ -141,6 +141,7 @@
             color: #ff3e1d !important;
             border-color: transparent;
             background: #ffe0db;
+            border-radius: 8px;
         }
 
         .btn-label-danger:hover {
@@ -148,6 +149,7 @@
             background: #ff3e1d;
             border-color: #ff3e1d;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
         }
 
         /* No Transition Class */
@@ -317,7 +319,6 @@
     @include('admin.components.sidebar')
 
     <!-- Header -->
-    @include('admin.components.header')
 
     <!-- Content -->
     <div id="content" class="content">
