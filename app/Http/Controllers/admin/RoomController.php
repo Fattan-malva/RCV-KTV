@@ -19,9 +19,9 @@ class RoomController extends Controller
 
         if ($request->has('availability') && $request->availability != '') {
             if ($request->availability == 'available') {
-                $query->whereIn('available', [1, 3, 5]);
+                $query->whereIn('available', [1, 3, 5, 7]);
             } elseif ($request->availability == 'unavailable') {
-                $query->whereIn('available', [2, 4]);
+                $query->whereIn('available', [2, 4, 6]);
             }
         }
 
@@ -32,8 +32,8 @@ class RoomController extends Controller
         $rooms = $query->with('category')->get();
         $categories = RoomCategory::all();
 
-        $availableRoomCount = Room::whereIn('available', [1, 3, 5])->count();
-        $unavailableRoomCount = Room::whereIn('available', [2, 4])->count();
+        $availableRoomCount = Room::whereIn('available', [1, 3, 5, 7])->count();
+        $unavailableRoomCount = Room::whereIn('available', [2, 4, 6])->count();
         $allRoomCount = Room::count();
 
 

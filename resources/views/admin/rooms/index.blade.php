@@ -326,19 +326,6 @@
         <div class="row">
             <div class="col-12 mb-3">
                 <div class="card-container">
-                     <!-- All Room Card -->
-                    <div class="card small" id="reset-button">
-                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
-                            data-availability="0">
-                            <div class="left-content">
-                                <h5>All Rooms</h5>
-                                <p>{{ $allRoomCount }}</p>
-                            </div>
-                            <div class="right-content-allroom">
-                                <i class="fas fa-hotel" id="unavailable-icon" data-availability="0"></i>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Available Rooms Card -->
                     <div class="card small">
                         <div class="d-flex justify-content-between align-items-center" id="available-icon"
@@ -377,6 +364,20 @@
                             </div>
                             <div class="right-content-guest">
                                 <i class="fa-solid fa-user-group" id="unavailable-icon" data-availability="0"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- All Room Card -->
+                    <div class="card small" id="reset-button">
+                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
+                            data-availability="0">
+                            <div class="left-content">
+                                <h5>All Rooms</h5>
+                                <p>{{ $allRoomCount }}</p>
+                            </div>
+                            <div class="right-content-allroom">
+                                <i class="fas fa-hotel" id="unavailable-icon" data-availability="0"></i>
                             </div>
                         </div>
                     </div>
@@ -586,9 +587,9 @@
                 <h4 class="mb-4 mt-4">{{ $categoryName }} ROOM</h4>
                 <div>
                     @forelse($categoryRooms as $room)
-                        @if(in_array($room->available, [1, 3, 5, 2, 4]))
+                        @if(in_array($room->available, [1, 3, 5, 2, 4, 6, 7]))
                             <div class="room-card edit-room 
-                                {{ in_array($room->available, [1, 3, 5]) ? 'available-room' : 'unavailable-room' }}"
+                                {{ in_array($room->available, [1, 3, 5, 7]) ? 'available-room' : 'unavailable-room' }}"
                                 data-id="{{ $room->id }}">
                                 <i class="fas fa-door-closed room-icon"></i>
                                 <span class="room-name">{{ $room->name }}</span>
@@ -858,18 +859,18 @@
                     // Status Button Logic
                     const status = parseInt(data.room.available);
                     const statusButtons = [];
-                    // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out
-                    if ([1, 5, 3].includes(status)) {
-                        // Show Open, Host Check-in, Maintenance Check-in
+                    // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out, 6=OO Check-in, 7=OO Check-out
+                    if ([1, 3, 5, 7].includes(status)) {
                         statusButtons.push({ val: 1, label: 'Open', color: 'success' });
-                        statusButtons.push({ val: 2, label: 'Host Check-in', color: 'primary' });
-                        statusButtons.push({ val: 4, label: 'Maintenance Check-in', color: 'warning' });
+                        statusButtons.push({ val: 2, label: 'Guest C-in', color: 'primary' });
+                        statusButtons.push({ val: 4, label: 'MNTC C-in', color: 'warning' });
+                        statusButtons.push({ val: 6, label: 'OO C-in', color: 'secondary' });
                     } else if (status === 2) {
-                        // Show Host Check-out only
-                        statusButtons.push({ val: 3, label: 'Host Check-out', color: 'danger' });
+                        statusButtons.push({ val: 3, label: 'Guest C-out', color: 'danger' });
                     } else if (status === 4) {
-                        // Show Maintenance Check-out only
-                        statusButtons.push({ val: 5, label: 'Maintenance Check-out', color: 'danger' });
+                        statusButtons.push({ val: 5, label: 'MNTC C-out', color: 'danger' });
+                    } else if (status === 6) {
+                        statusButtons.push({ val: 7, label: 'OO C-out', color: 'danger' });
                     }
 
                     // Render buttons
