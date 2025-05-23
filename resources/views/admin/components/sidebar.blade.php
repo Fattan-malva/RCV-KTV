@@ -170,6 +170,16 @@
                 <i class="fas fa-hotel"></i> <span>Rooms</span>
             </a>
         </li>
+        <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
+            <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
+            </a>
+        </li>
+        <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
+            <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
+                <i class="fa-solid fa-list-check"></i> <span>Booking</span>
+            </a>
+        </li>
         <li
             class="{{ request()->routeIs('admin.user-management') || request()->routeIs('admin.customer-edit') ? 'active' : '' }}">
             <a href="{{ route('admin.user-management') }}" class="d-flex align-items-center">

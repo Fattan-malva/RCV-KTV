@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use Illuminate\Http\Request;
+use App\Models\TrxRoomDetail;
 class RoomController extends Controller
 {
     public function index(Request $request)
@@ -35,9 +36,12 @@ class RoomController extends Controller
         $availableRoomCount = Room::whereIn('available', [1, 3, 5, 7])->count();
         $unavailableRoomCount = Room::whereIn('available', [2, 4, 6])->count();
         $allRoomCount = Room::count();
+        $roomToday = TrxRoomDetail::where('TrxDate', now()->format('Y-m-d'))
+        ->where('TypeCheckIn', [2,3] )
+        ->count();
 
 
-        return view('admin.rooms.index', compact('rooms', 'categories', 'availableRoomCount', 'unavailableRoomCount', 'allRoomCount'));
+        return view('admin.rooms.index', compact('rooms', 'categories', 'availableRoomCount', 'unavailableRoomCount', 'allRoomCount', 'roomToday'));
     }
 
 
@@ -108,11 +112,12 @@ class RoomController extends Controller
             ->first();
         if (!$trx) {
             // Generate TrxId unik (varchar acak)
-            $trxId = 'TRX-' . strtoupper(bin2hex(random_bytes(8)));
+            $trxId = 'TRX-' . str_replace(['-', ' ', ':', '.'], '', now()->format('Y-m-d H:i:s.u'));
             \App\Models\TrxRoomDetail::create([
                 'TrxId' => $trxId,
                 'TrxDate' => now()->format('Y-m-d'),
                 'CheckInTime' => now(),
+                'TypeCheckIn' => $status,
                 'RoomId' => $roomId,
                 'GuestName' => $request->guest_name,
                 'Notes' => $request->notes,

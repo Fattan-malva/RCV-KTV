@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\auth\AuthUserController;
-use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController};
+use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController, TrxRoomDetailController};
 use App\Http\Controllers\user\{DashboardUserController};
 
 
@@ -51,6 +51,8 @@ Route::middleware(['auth.check:admin'])->group(function () {
     Route::delete('customer-destroy/{id}', [UserManagementController::class, 'destroy'])->name('admin.user-customer-destroy');
 
     Route::get('admin-rooms', [RoomController::class, 'index'])->name('admin.rooms');
+    Route::get('admin-rooms-detail', [TrxRoomDetailController::class, 'index'])->name('admin.rooms.detail');
+    Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
     Route::post('rooms-store', [RoomController::class, 'store'])->name('admin.rooms-store');
     Route::get('/rooms/{id}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
     Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');

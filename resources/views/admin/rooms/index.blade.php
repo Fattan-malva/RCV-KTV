@@ -15,7 +15,7 @@
         }
 
         .small {
-            padding: 15px 0px;
+            padding: 15px 10px;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
             flex: 1 1 calc(25% - 15px);
             margin-bottom: 10px;
@@ -57,8 +57,8 @@
         }
 
         .right-content-unavailable i {
-            color: #FF3E1D;
-            background-color: #FFE0DB;
+            color: #975a00;
+            background-color: #f8d9ab;
             padding: 11px;
             border-radius: 10%;
             font-size: 2rem;
@@ -171,15 +171,26 @@
         }
 
         .available-room {
-            background-color: #f8f9fa;
-            color: #696cff;
-            border-color: #f8f9fa;
+            background-color: #E8FADF;
+            color: #71DD37;
+            border-color: #E8FADF;
         }
 
         .unavailable-room {
-            background-color: #ffe8e8;
-            border-color: #ffe8e8;
-            color: #dc3545;
+            background-color: #f8d9ab;   
+            border-color: #f9deb6;      
+            color: #975a00;             
+        }
+
+        .mntc-room {
+            background-color: #bdbdbd;
+            color: #222;
+            border-color: #bdbdbd;
+        }
+        .oo-room {
+            background-color: #030303;
+            color: #ffffff; 
+            border-color: #030303;
         }
 
         .room-icon {
@@ -188,7 +199,7 @@
         }
 
         .unavailable-room .room-icon {
-            color: #dc3545;
+            color: #975a00;
         }
 
         .card .room-card {
@@ -223,15 +234,26 @@
             font-weight: bold;
         }
         .available-legend {
-            background-color: #f8f9fa;
-            color: #696cff;
-            border-color: #f8f9fa;
+            background-color: #E8FADF;
+            color: #71DD37;
+            border-color: #E8FADF;
         }
 
         .unavailable-legend {
-            background-color: #ffe8e8;
-            border-color: #ffe8e8;
-            color: #dc3545;
+            background-color: #f8d9ab;   
+            border-color: #f9deb6;      
+            color: #975a00; 
+        }
+
+        .mntc-legend {
+            background-color: #bdbdbd;
+            color: #222;
+            border-color: #bdbdbd;
+        }
+        .oo-legend {
+            background-color: #030303;
+            color: #ffffff; 
+            border-color: #030303;
         }
 
         .legend-icon {
@@ -309,7 +331,17 @@
             width: 100%;
             font-size: 1.5rem;
         }
-
+        .btn-mntc {
+            background-color: transparent !important; 
+            color: #333 !important;
+            border-color: #bdbdbd !important;
+            transition: background 0.2s;
+        }
+        .btn-mntc.active {
+            background-color: #bdbdbd !important; 
+            color: #222 !important;
+            border-color: #9e9e9e !important;
+        }
         #roomStatusButtons .status-btn {
             margin-right: 8px;
             margin-bottom: 8px;
@@ -371,18 +403,19 @@
                     </div>
 
                     <!-- Guest Card -->
-                    <div class="card small">
-                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
-                            data-availability="0">
-                            <div class="left-content">
-                                <h5>Room Today's</h5>
-                                <p>{{ $unavailableRoomCount }} Guests</p>
-                            </div>
-                            <div class="right-content-guest">
-                                <i class="fa-solid fa-user-group" id="unavailable-icon" data-availability="0"></i>
+                   <a href="{{ route('admin.rooms.detail', ['date' => now()->format('Y-m-d'), 'typecheckin' => 'guest']) }}" style="cursor:pointer; text-decoration: none; color: inherit;">
+                        <div class="card small" style="cursor:pointer;">
+                            <div class="d-flex justify-content-between align-items-center" id="unavailable-icon" data-availability="0">
+                                <div class="left-content">
+                                    <h5>Room Today's</h5>
+                                    <p>{{ $roomToday }} Rooms</p>
+                                </div>
+                                <div class="right-content-guest">
+                                    <i class="fa-solid fa-building" id="unavailable-icon" data-availability="0"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- All Room Card -->
                     <div class="card small" id="reset-button">
@@ -596,27 +629,35 @@
             @php
                 $groupedRooms = $rooms->groupBy(function($room) {
                     return $room->category ? $room->category->name : 'Uncategorized';
-                });
+                })->sortKeys();
             @endphp
 
             @foreach($groupedRooms as $categoryName => $categoryRooms)
-                <h4 class="mb-4 mt-4">{{ $categoryName }} ROOM</h4>
+                <h4 class="mb-4 mt-4">{{ $categoryName }}</h4>
                 <div>
                     @forelse($categoryRooms as $room)
                         @if(in_array($room->available, [1, 3, 5, 2, 4, 6, 7]))
-                            <div class="room-card edit-room 
-                                {{ in_array($room->available, [1, 3, 5, 7]) ? 'available-room' : 'unavailable-room' }}"
+                            <div class="room-card edit-room
+                                @if(in_array($room->available, [1, 3,5, 7])) available-room
+                                @elseif($room->available == 2) unavailable-room
+                                @elseif($room->available == 4) mntc-room
+                                @elseif($room->available == 6) oo-room
+                                @else unavailable-room @endif"
                                 data-id="{{ $room->id }}">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start;">
                                     <div>
                                         <i class="fas fa-door-closed room-icon"></i>
                                         <span class="room-name">{{ $room->name }}</span>
                                     </div>
-                                    @if($room->currentTrx && $room->currentTrx->GuestName)
-                                        <div style="font-size: 12px; font-weight: bold; margin-top: 4px; text-align: center;">
-                                            <i class="fa fa-user"></i> {{ $room->currentTrx->GuestName }}
-                                        </div>
-                                    @endif
+                                        @if($room->currentTrx && $room->currentTrx->GuestName)
+                                            <div style="font-size: 12px; font-weight: bold; margin-top: 4px; text-align: center;">
+                                                <i class="fa fa-user"></i> {{ $room->currentTrx->GuestName }}
+                                            </div>
+                                        @else
+                                            <div style="font-size: 16px; font-weight: bold; margin-top: 4px; text-align: center; color: #28a745;">
+                                                Idle
+                                            </div>
+                                        @endif
                                 </div>
                             </div>
                         @endif
@@ -634,6 +675,14 @@
                 <div class="legend-card unavailable-legend">
                     <i class="fas fa-door-closed legend-icon"></i>
                     <span class="legend-name">Used</span>
+                </div>
+                <div class="legend-card mntc-legend">
+                    <i class="fas fa-door-closed legend-icon"></i>
+                    <span class="legend-name">Maintenance</span>
+                </div>
+                <div class="legend-card oo-legend">
+                    <i class="fas fa-door-closed legend-icon"></i>
+                    <span class="legend-name">OO</span>
                 </div>
             </div>
         </div>
@@ -887,10 +936,10 @@
                     const statusButtons = [];
                     // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out, 6=OO Check-in, 7=OO Check-out
                     if ([1, 3, 5, 7].includes(status)) {
-                        statusButtons.push({ val: 1, label: 'Open', color: 'success' });
-                        statusButtons.push({ val: 2, label: 'Guest Check-in', color: 'primary' });
-                        statusButtons.push({ val: 4, label: 'MNTC Check-in', color: 'warning' });
-                        statusButtons.push({ val: 6, label: 'OO Check-in', color: 'secondary' });
+                        // statusButtons.push({ val: 1, label: 'Open', color: 'success' });
+                        statusButtons.push({ val: 2, label: 'Guest Check-in', color: 'success' });
+                        statusButtons.push({ val: 4, label: 'MNTC Check-in', color: 'secondary', customClass: 'btn-mntc' });
+                        statusButtons.push({ val: 6, label: 'OO Check-in', color: 'dark', textWhite: true });
                     } else if (status === 2) {
                         statusButtons.push({ val: 3, label: 'Guest Check-out', color: 'danger' });
                     } else if (status === 4) {
@@ -903,11 +952,11 @@
                     const $btnGroup = $('#roomStatusButtons');
                     $btnGroup.empty();
                     statusButtons.forEach(btn => {
-                        $btnGroup.append(`
-                <button type="button" class="btn btn-outline-${btn.color} status-btn" data-value="${btn.val}">
-                    <strong>${btn.label}</strong>
-                </button>
-            `);
+                    $btnGroup.append(`
+                        <button type="button" class="btn btn-outline-${btn.color} status-btn ${btn.customClass || ''}" data-value="${btn.val}">
+                            <strong>${btn.label}</strong>
+                        </button>
+                    `);
                     });
 
                     // Set initial value
