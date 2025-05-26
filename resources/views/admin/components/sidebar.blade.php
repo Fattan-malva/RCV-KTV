@@ -175,8 +175,8 @@
                 <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
             </a>
         </li>
-        <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
-            <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
+        <li class="{{ request()->routeIs('admin.rooms.booking') ? 'active' : '' }}">
+            <a href="{{ route('admin.rooms.booking') }}" class="d-flex align-items-center">
                 <i class="fa-solid fa-list-check"></i> <span>Booking</span>
             </a>
         </li>

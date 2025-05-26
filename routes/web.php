@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\auth\AuthUserController;
-use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController, TrxRoomDetailController};
+use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController, TrxRoomDetailController, TrxRoomBookingController};
 use App\Http\Controllers\user\{DashboardUserController};
 
 
@@ -20,7 +20,7 @@ use App\Http\Controllers\user\{DashboardUserController};
 
 
 Route::middleware(['guest.check'])->group(function () {
-    
+
     Route::match(['get', 'post'], '/', [AuthUserController::class, 'showLoginForm'])->name('login');
     Route::get('landing', [LandingPageController::class, 'index'])->name('landing.index');
     Route::get('rooms', [LandingPageController::class, 'rooms'])->name('landing.rooms');
@@ -51,13 +51,18 @@ Route::middleware(['auth.check:admin'])->group(function () {
     Route::delete('customer-destroy/{id}', [UserManagementController::class, 'destroy'])->name('admin.user-customer-destroy');
 
     Route::get('admin-rooms', [RoomController::class, 'index'])->name('admin.rooms');
-    Route::get('admin-rooms-detail', [TrxRoomDetailController::class, 'index'])->name('admin.rooms.detail');
-    Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
     Route::post('rooms-store', [RoomController::class, 'store'])->name('admin.rooms-store');
     Route::get('/rooms/{id}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
     Route::put('/rooms/{id}', [RoomController::class, 'update'])->name('rooms.update');
+
     Route::post('categories-store', [RoomCategoryController::class, 'store'])->name('admin.categories-store');
     Route::delete('categories-destroy{id}', [RoomCategoryController::class, 'destroy'])->name('admin.categories-destroy');
+
+    Route::get('admin-rooms-detail', [TrxRoomDetailController::class, 'index'])->name('admin.rooms.detail');
+    Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
+
+    Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
+    Route::get('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
 });
 Route::middleware(['auth.check:user'])->group(function () {
     Route::get('dashboard-user', [DashboardUserController::class, 'index'])->name('user.index');

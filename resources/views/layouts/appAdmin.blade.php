@@ -39,14 +39,18 @@
             background-color: #F5F5F9;
         }
 
-        body, html {
+        body,
+        html {
             overflow-y: auto;
         }
+
         body::-webkit-scrollbar,
         html::-webkit-scrollbar {
             display: none !important;
         }
-        body, html {
+
+        body,
+        html {
             -ms-overflow-style: none !important;
             scrollbar-width: none !important;
         }
@@ -315,6 +319,15 @@
         .mui-input-container.is-invalid input,
         .mui-input-container.is-invalid select {
             border-color: #f44336;
+        }
+
+        th {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        th:hover {
+            color: #696CFF !important;
         }
     </style>
 
