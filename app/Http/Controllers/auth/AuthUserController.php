@@ -16,10 +16,17 @@ use League\Flysystem\UrlGeneration\PublicUrlGenerator;
 
 class AuthUserController extends Controller
 {
-    public function showLoginForm(): Response
+    public function showLoginForm(Request $request): Response
     {
+        if ($request->session()->has('user_id')) {
+            $role = $request->session()->get('user_role');
+            if ($role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('user.index');
+            }
+        }
         return response(view('auth.login'));
-
     }
     public function login(Request $request): RedirectResponse
     {
@@ -96,7 +103,7 @@ class AuthUserController extends Controller
     {
         $socialUser = Socialite::driver('google')->stateless()->user();
         $registeredUser = User::where('google_id', $socialUser->id)->first();
-    
+
         if (!$registeredUser) {
             // Create or update the User record
             $user = User::updateOrCreate([
@@ -108,7 +115,7 @@ class AuthUserController extends Controller
                 'google_token' => $socialUser->token,
                 'google_refresh_token' => $socialUser->refreshToken,
             ]);
-    
+
             // Create the Customer record
             $customer = Customer::create([
                 'username' => $socialUser->email, // Using email as username
@@ -117,10 +124,10 @@ class AuthUserController extends Controller
                 'name' => $socialUser->name, // Setting the name from Google
                 'login_type' => 'Google Account', // Marking as a Google login
             ]);
-    
+
             // Login the user
             Auth::login($user);
-    
+
             // Store user info including email in session
             session([
                 'user_id' => $user->id,
@@ -129,13 +136,13 @@ class AuthUserController extends Controller
                 'user_name' => $user->name,
                 'user_email' => $user->email, // Storing email in the session
             ]);
-    
+
             return redirect()->route('user.index');
         }
-    
+
         // If the user is already registered, log them in
         Auth::login($registeredUser);
-    
+
         // Store user info in session
         session([
             'user_id' => $registeredUser->id,
@@ -144,9 +151,9 @@ class AuthUserController extends Controller
             'user_name' => $registeredUser->name,
             'user_email' => $registeredUser->email, // Storing email in the session
         ]);
-    
+
         return redirect()->route('user.index');
     }
-    
-    
+
+
 }

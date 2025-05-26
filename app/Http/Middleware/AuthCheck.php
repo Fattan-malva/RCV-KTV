@@ -35,7 +35,10 @@ class AuthCheck
         if ($role && $userRole !== $role) {
             return redirect('login')->with('fail', 'Anda tidak memiliki akses ke halaman ini');
         }
-
-        return $next($request);
+        $response = $next($request);
+        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
     }
 }
