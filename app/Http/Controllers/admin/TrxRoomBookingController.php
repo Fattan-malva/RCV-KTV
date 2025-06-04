@@ -37,6 +37,25 @@ class TrxRoomBookingController extends Controller
         return redirect()->route('admin.rooms.booking')->with('success', 'Booking List added!');
     }
 
+    public function edit($TrxId)
+    {
+        $booking = TrxRoomBooking::where('TrxId', $TrxId)->firstOrFail();
+        return response()->json($booking);
+    }
+
+    public function update(Request $request, $TrxId)
+    {
+        $validated = $request->validate([
+            'RoomId' => 'required',
+            'GuestName' => 'required',
+            'TimeIn' => 'required',
+            'Notes' => 'nullable',
+            'BookPack' => 'nullable',
+        ]);
+        TrxRoomBooking::where('TrxId', $TrxId)->update($validated);
+        return response()->json(['success' => true]);
+    }
+
     public function destroy($TrxId)
     {
         TrxRoomBooking::where('TrxId', $TrxId)->delete();

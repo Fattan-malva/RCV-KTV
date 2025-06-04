@@ -149,82 +149,91 @@
         text-align: center;
     }
 
-   .sidebar-logout-card-user {
-    position: absolute;
-    bottom: 30px;
-    left: 20px;
-    width: 210px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(105, 108, 255, 0.08), 0 1.5px 4px rgba(0, 0, 0, 0.07);
-    padding: 14px 14px 10px 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    font-size: 1rem;
-}
-.sidebar.collapsed .sidebar-logout-card-user {
-    width: 50px;
-    left: 15px;
-    padding: 8px 0;
-    align-items: center;
-}
-.sidebar-user-avatar {
-    background-color: #696cff;
-    color: #fff;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-}
-.sidebar.collapsed .sidebar-user-avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
-    margin-left: 9px;
-}
-.sidebar.collapsed .sidebar-user-name,
-.sidebar.collapsed .sidebar-user-username,
-.sidebar.collapsed .sidebar-logout-btn i {
-    display: none;
-}
-.sidebar-logout-btn {
-    background: none;
-    border: none;
-    color: #ff3e1d;
-    font-weight: bold;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    padding: 6px 8px;
-    transition: background 0.2s, color 0.2s;
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-}
-.sidebar-logout-btn i {
-    font-size: 1.2rem;
-    color: #ff3e1d;
-    transition: color 0.2s;
-}
-.sidebar-logout-btn:hover,
-.sidebar-logout-btn:focus {
-    background: #FFE0DB;
-    color: #b82020;
-    outline: none;
-}
-.sidebar-logout-btn:hover i {
-    color: #b82020;
-}
-@media (max-width: 768px) {
     .sidebar-logout-card-user {
+        position: absolute;
+        bottom: 30px;
+        left: 20px;
+        width: 210px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(105, 108, 255, 0.08), 0 1.5px 4px rgba(0, 0, 0, 0.07);
+        padding: 14px 14px 10px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: 1rem;
+    }
+
+    .sidebar.collapsed .sidebar-logout-card-user {
+        width: 50px;
+        left: 15px;
+        padding: 8px 0;
+        align-items: center;
+    }
+
+    .sidebar-user-avatar {
+        background-color: #696cff;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sidebar.collapsed .sidebar-user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        margin-left: 9px;
+    }
+
+    .sidebar.collapsed .sidebar-user-name,
+    .sidebar.collapsed .sidebar-user-username,
+    .sidebar.collapsed .sidebar-logout-btn i {
         display: none;
     }
-}
+
+    .sidebar-logout-btn {
+        background: none;
+        border: none;
+        color: #ff3e1d;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        padding: 6px 8px;
+        transition: background 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        margin-left: 8px;
+    }
+
+    .sidebar-logout-btn i {
+        font-size: 1.2rem;
+        color: #ff3e1d;
+        transition: color 0.2s;
+    }
+
+    .sidebar-logout-btn:hover,
+    .sidebar-logout-btn:focus {
+        background: #FFE0DB;
+        color: #b82020;
+        outline: none;
+    }
+
+    .sidebar-logout-btn:hover i {
+        color: #b82020;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar-logout-card-user {
+            display: none;
+        }
+    }
 </style>
 <!-- Sidebar -->
 <div id="sidebar" class="sidebar text-white">
@@ -246,14 +255,14 @@
                 <i class="fas fa-hotel"></i> <span>Rooms</span>
             </a>
         </li>
-        <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
-            <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
-                <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
-            </a>
-        </li>
         <li class="{{ request()->routeIs('admin.rooms.booking') ? 'active' : '' }}">
             <a href="{{ route('admin.rooms.booking') }}" class="d-flex align-items-center">
                 <i class="fa-solid fa-list-check"></i> <span>Booking</span>
+            </a>
+        </li>
+        <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
+            <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
             </a>
         </li>
         <li
@@ -266,26 +275,29 @@
         <li><a href="#" class="d-flex align-items-center"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
     </ul>
 
-   <div class="sidebar-logout-card-user">
-    <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="d-flex align-items-center">
-            <div class="sidebar-user-avatar">
-                <span>{{ session('user_name')[0] ?? 'U' }}</span>
+    <div class="sidebar-logout-card-user">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center">
+                <div class="sidebar-user-avatar">
+                    <span>{{ session('user_name')[0] ?? 'U' }}</span>
+                </div>
+                <div class="ms-2" style="overflow:hidden;">
+                    <div class="fw-bold sidebar-user-name" style="font-size:1rem; color:black;">
+                        {{ session('user_name') }}</div>
+                    <div class="text-muted sidebar-user-username" style="font-size:0.85rem;">
+                        {{ session('user_username') }}</div>
+                </div>
             </div>
-            <div class="ms-2" style="overflow:hidden;">
-                <div class="fw-bold sidebar-user-name" style="font-size:1rem; color:black;">{{ session('user_name') }}</div>
-                <div class="text-muted sidebar-user-username" style="font-size:0.85rem;">{{ session('user_username') }}</div>
-            </div>
+            <form action="{{ route('logout') }}" method="POST" id="logoutFormSidebar"
+                onsubmit="return confirmLogoutSidebar(event)">
+                @csrf
+                <button type="submit" class="sidebar-logout-btn d-flex align-items-center justify-content-center"
+                    title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
         </div>
-        <form action="{{ route('logout') }}" method="POST" id="logoutFormSidebar"
-            onsubmit="return confirmLogoutSidebar(event)">
-            @csrf
-            <button type="submit" class="sidebar-logout-btn d-flex align-items-center justify-content-center" title="Logout">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
-        </form>
     </div>
-</div>
 </div>
 
 <!-- Bottom Navbar for Mobile -->

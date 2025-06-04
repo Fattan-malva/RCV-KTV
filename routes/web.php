@@ -63,6 +63,8 @@ Route::middleware(['auth.check:admin'])->group(function () {
 
     Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
     Route::delete('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.trx-room-booking.destroy');
+    Route::get('admin/trx-room-booking/{TrxId}/edit', [TrxRoomBookingController::class, 'edit'])->name('admin.trx-room-booking.edit');
+Route::put('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'update'])->name('admin.trx-room-booking.update');
     Route::post('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
 });
 Route::middleware(['auth.check:user'])->group(function () {

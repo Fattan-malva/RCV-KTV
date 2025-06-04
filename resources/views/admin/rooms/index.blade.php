@@ -367,6 +367,22 @@
                 width: 150px;
             }
         }
+
+        .blinking-room {
+            animation: colorful-blink 1.5s linear infinite;
+            color: black; /* Optional: agar teks kontras */
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        @keyframes colorful-blink {
+            0%   { background-color: #c10000; opacity: 1; }
+            25%  { background-color: #ff8000; opacity: 0.7; }
+            50%  { background-color: #ffff01; opacity: 0.3; }
+            75%  { background-color: #00ad00; opacity: 0.7; }
+            100% { background-color: #00bfff; opacity: 1; }
+        }
+
     </style>
 
     <div class="container-content" style="margin-right: 25px;">
@@ -637,13 +653,25 @@
                 <div>
                     @forelse($categoryRooms as $room)
                         @if(in_array($room->available, [1, 3, 5, 2, 4, 6, 7]))
-                            <div class="room-card edit-room
-                                @if(in_array($room->available, [1, 3,5, 7])) available-room
-                                @elseif($room->available == 2) unavailable-room
-                                @elseif($room->available == 4) mntc-room
-                                @elseif($room->available == 6) oo-room
-                                @else unavailable-room @endif"
-                                data-id="{{ $room->id }}">
+                        @php
+                            // Cek booking paling awal untuk room ini
+                            $nextBooking = $upcomingBookings[$room->roomId][0] ?? null;
+                            $isBlinking = false;
+                            if ($nextBooking) {
+                                $timeIn = \Carbon\Carbon::parse($nextBooking->TimeIn);
+                                $now = \Carbon\Carbon::now();
+                                // Jika TimeIn dalam 1 jam ke depan
+                                $isBlinking = $timeIn->greaterThan($now) && $timeIn->diffInMinutes($now) <= 60;
+                            }
+                        @endphp    
+                        <div class="room-card edit-room
+                                    @if(in_array($room->available, [1, 3,5, 7])) available-room
+                                    @elseif($room->available == 2) unavailable-room
+                                    @elseif($room->available == 4) mntc-room
+                                    @elseif($room->available == 6) oo-room
+                                    @else unavailable-room @endif
+                                    @if($isBlinking) blinking-room @endif"
+                                    data-id="{{ $room->id }}">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start;">
                                     <div>
                                         <i class="fas fa-door-closed room-icon"></i>
@@ -689,7 +717,7 @@
 
         <!-- Modal Update -->
         <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
-            aria-hidden="true">
+            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form id="updateRoomForm" method="POST">
@@ -699,7 +727,9 @@
                             <h5 class="modal-title" id="updateRoomModalLabel">Room</h5>
                         </div>
                         <div class="modal-body">
+                           
                             <div class="row">
+                                 <div id="roomBookingList" class="mb-3"></div>
                                  <input type="hidden" id="roomName" name="name" required>
                                 <div class="mb-3 col-md-6">
                                     <label for="guestName" class="form-label">Guest Name</label>
@@ -760,6 +790,20 @@
     </div>
     <!-- JS Offcanvas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script>
+        let bookingHtml = '';
+        if (data.bookings && data.bookings.length > 0) {
+            bookingHtml += '<div class="alert alert-info p-2 mb-2"><strong>Upcoming Booking List:</strong><ul style="margin-bottom:0">';
+            data.bookings.forEach(function(booking) {
+                bookingHtml += `<li><b>${booking.GuestName}</b> at <span style="color:#696cff">${booking.TimeIn ? moment(booking.TimeIn).format('DD MMM YYYY HH:mm') : '-'}</span></li>`;
+            });
+            bookingHtml += '</ul></div>';
+        } else {
+            bookingHtml += '<div class="alert alert-secondary p-2 mb-2">No upcoming bookings for this room.</div>';
+        }
+        $('#roomBookingList').html(bookingHtml);
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Get the elements
@@ -913,20 +957,32 @@
                 const roomId = $(this).data('id');
                 const url = `/rooms/${roomId}/edit`;
 
-                // Mengambil data room dan kategori dari server
                 $.get(url, function (data) {
-                    // Mengisi modal dengan data yang diterima
+                    // Render Booking List
+                    let bookingHtml = '';
+                    if (data.bookings && data.bookings.length > 0) {
+                        bookingHtml += '<div class="alert alert-info p-2 mb-2"><strong>Upcoming Booking List:</strong><ul style="margin-bottom:0">';
+                        data.bookings.forEach(function(booking) {
+                            bookingHtml += `<li><b>${booking.GuestName}</b> at <span style="color:#696cff">${booking.TimeIn ? moment(booking.TimeIn).format('DD MMM YYYY HH:mm') : '-'}</span></li>`;
+                        });
+                        bookingHtml += '</ul></div>';
+                    } else {
+                        bookingHtml += '<div class="alert alert-secondary p-2 mb-2">No upcoming bookings for this room.</div>';
+                    }
+                    $('#roomBookingList').html(bookingHtml);
+
+                    // Isi modal form seperti biasa
                     $('#updateRoomModalLabel').text(`Room : ${data.room.name}`);
                     $('#updateRoomModal #roomName').val(data.room.name);
                     $('#updateRoomModal #guestName').val(data.trx ? data.trx.GuestName : '');
                     $('#updateRoomModal #notes').val(data.trx ? data.trx.Notes : '');
-                    $('#updateRoomModal #roomCategory').html(''); // Clear options sebelum mengisinya
+                    $('#updateRoomModal #roomCategory').html('');
                     data.categories.forEach(category => {
                         $('#updateRoomModal #roomCategory').append(`
-                    <option value="${category.id}" ${data.room.room_category_id == category.id ? 'selected' : ''}>
-                        ${category.name}
-                    </option>
-                `);
+                <option value="${category.id}" ${data.room.room_category_id == category.id ? 'selected' : ''}>
+                    ${category.name}
+                </option>
+            `);
                     });
                     $('#updateRoomModal #roomCapacity').val(data.room.capacity);
                     $('#updateRoomModal #roomCategoryHidden').val(data.room.room_category_id);
@@ -934,9 +990,7 @@
                     // Status Button Logic
                     const status = parseInt(data.room.available);
                     const statusButtons = [];
-                    // Status: 1=Open, 2=Host Check-in, 3=Host Check-out, 4=Maintenance Check-in, 5=Maintenance Check-out, 6=OO Check-in, 7=OO Check-out
                     if ([1, 3, 5, 7].includes(status)) {
-                        // statusButtons.push({ val: 1, label: 'Open', color: 'success' });
                         statusButtons.push({ val: 2, label: 'Guest Check-in', color: 'success' });
                         statusButtons.push({ val: 4, label: 'MNTC Check-in', color: 'secondary', customClass: 'btn-mntc' });
                         statusButtons.push({ val: 6, label: 'OO Check-in', color: 'dark', textWhite: true });
@@ -948,28 +1002,22 @@
                         statusButtons.push({ val: 7, label: 'OO Check-out', color: 'danger' });
                     }
 
-                    // Render buttons
                     const $btnGroup = $('#roomStatusButtons');
                     $btnGroup.empty();
                     statusButtons.forEach(btn => {
-                    $btnGroup.append(`
-                        <button type="button" class="btn btn-outline-${btn.color} status-btn ${btn.customClass || ''}" data-value="${btn.val}">
-                            <strong>${btn.label}</strong>
-                        </button>
-                    `);
+                        $btnGroup.append(`
+                <button type="button" class="btn btn-outline-${btn.color} status-btn ${btn.customClass || ''}" data-value="${btn.val}">
+                    <strong>${btn.label}</strong>
+                </button>
+            `);
                     });
 
-                    // Set initial value
                     $('#updateRoomModal #roomAvailable').val(status);
-
-                    // Button click event
                     $('.status-btn').off('click').on('click', function () {
                         $('.status-btn').removeClass('active');
                         $(this).addClass('active');
                         $('#updateRoomModal #roomAvailable').val($(this).data('value'));
                     });
-
-                    // Set active button
                     $(`.status-btn[data-value="${status}"]`).addClass('active');
 
                     $('#updateRoomForm').attr('action', `/rooms/${roomId}`);

@@ -53,6 +53,9 @@
                                         <i class="fa fa-times"></i>
                                         Cancel Booking
                                     </button>
+                                    <button class="btn btn-warning btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -60,7 +63,6 @@
                 </table>
             </div>
         </div>
-
     </div>
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateTrxRoomDetail"
@@ -80,7 +82,7 @@
                     <select name="RoomId" class="@error('RoomId') is-invalid @enderror" required>
                         <option value="">Select Room</option>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->roomId }}">{{ $room->name }}</option>
+                            <option value="{{ $room->roomId }}">{{ $room->name }} ({{ $room->roomId }})</option>
                         @endforeach
                     </select>
                     <label>Room Name</label>
@@ -98,7 +100,7 @@
                 </div>
 
                 <div class="mui-input-container">
-                    <textarea name="Notes" class="@error('Notes') is-invalid @enderror"></textarea>
+                    <input type="text" name="Notes" class="@error('Notes') is-invalid @enderror">
                     <label>Notes</label>
                     @error('Notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
@@ -110,8 +112,106 @@
             </form>
         </div>
     </div>
-
+    <!-- Modal Update Booking -->
+    <div class="modal fade" id="updateBookingModal" tabindex="-1" aria-labelledby="updateBookingModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="updateBookingForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateBookingModalLabel">Update Booking</h5>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editTrxId" name="TrxId">
+                        <div class="mui-input-container">
+                            <input type="text" id="editGuestName" name="GuestName" required>
+                            <label>Guest Name</label>
+                        </div>
+                        <div class="mui-input-container">
+                            <select id="editRoomId" name="RoomId" required>
+                                <option value="">Select Room</option>
+                                @foreach($rooms as $room)
+                                    <option value="{{ $room->roomId }}">{{ $room->name }} ({{ $room->roomId }})</option>
+                                @endforeach
+                            </select>
+                            <label>Room Name</label>
+                        </div>
+                        <div class="mui-input-container">
+                            <input type="datetime-local" id="editTimeIn" name="TimeIn" required>
+                            <label>Check In Date & Time</label>
+                        </div>
+                        <div class="mui-input-container">
+                            <input type="text" id="editBookPack" name="BookPack">
+                            <label>Booking Package</label>
+                        </div>
+                        <div class="mui-input-container">
+                            <input type="text" id="editNotes" name="Notes">
+                            <label>Notes</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // ...existing DataTable code...
+
+            // Edit Booking Button Click
+            $('.edit-booking-btn').on('click', function () {
+                const trxId = $(this).data('trxid');
+                $.get(`/admin/trx-room-booking/${trxId}/edit`, function (data) {
+                    $('#editTrxId').val(data.TrxId);
+                    $('#editGuestName').val(data.GuestName);
+                    $('#editRoomId').val(data.RoomId);
+                    $('#editTimeIn').val(data.TimeIn ? data.TimeIn.replace(' ', 'T') : '');
+                    $('#editBookPack').val(data.BookPack);
+                    $('#editNotes').val(data.Notes);
+                    $('#updateBookingForm').attr('action', `/admin/trx-room-booking/${trxId}`);
+                    $('#updateBookingModal').modal('show');
+                });
+            });
+
+            // Submit Update Booking
+            $('#updateBookingForm').on('submit', function (e) {
+                e.preventDefault();
+                const form = $(this);
+                const actionUrl = form.attr('action');
+                const formData = form.serialize();
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#updateBookingModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Updated!',
+                                text: 'Booking updated successfully.',
+                                toast: true,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(() => window.location.reload(), 1200);
+                        }
+                    },
+                    error: function (xhr) {
+                        Swal.fire('Error!', 'Failed to update booking.', 'error');
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         @if(session('success'))
             Swal.fire({
