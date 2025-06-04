@@ -13,7 +13,7 @@
                     </button>
                 </div>
                 <div class="d-flex align-items-center">
-                    <img src="{{ asset('img/karaokeroom.png') }}" alt="Image" class="img-fluid"
+                    <img src="{{ asset('img/bookinglist.png') }}" alt="Image" class="img-fluid"
                         style="max-width: 120px; margin-bottom:8px; margin-right:50px;" />
                 </div>
             </div>
@@ -30,6 +30,7 @@
                             <th>Guest</th>
                             <th>Notes</th>
                             <th>BookPack</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,6 +48,12 @@
                                 </td>
                                 <td>{{ $booking->Notes ?? '-' }}</td>
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrx('{{ $booking->TrxId }}')">
+                                        <i class="fa fa-times"></i>
+                                        Cancel Booking
+                                    </button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -65,25 +72,31 @@
             <form action="{{ route('admin.trx-room-booking.store') }}" method="POST">
                 @csrf
                 <div class="mui-input-container">
-                    <input type="time" name="TimeIn" class="@error('TimeIn') is-invalid @enderror" required>
-                    <label>Check In Time</label>
-                    @error('TimeIn')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <input type="text" name="GuestName" class="@error('GuestName') is-invalid @enderror" required>
+                    <label>Guest Name</label>
+                    @error('GuestName')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
-                    <input type="text" name="RoomId" class="@error('RoomId') is-invalid @enderror" required>
-                    <label>Room ID</label>
+                    <select name="RoomId" class="@error('RoomId') is-invalid @enderror" required>
+                        <option value="">Select Room</option>
+                        @foreach($rooms as $room)
+                            <option value="{{ $room->roomId }}">{{ $room->name }}</option>
+                        @endforeach
+                    </select>
+                    <label>Room Name</label>
                     @error('RoomId')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
-                    <input type="text" name="GuesName" class="@error('GuesName') is-invalid @enderror" required>
-                    <label>Guest Name</label>
-                    @error('GuesName')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <input type="datetime-local" name="TimeIn" class="@error('TimeIn') is-invalid @enderror" required>
+                    <label>Check In Date & Time</label>
+                    @error('TimeIn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
                     <input type="text" name="BookPack" class="@error('BookPack') is-invalid @enderror">
                     <label>Booking Package</label>
                     @error('BookPack')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
+
                 <div class="mui-input-container">
                     <textarea name="Notes" class="@error('Notes') is-invalid @enderror"></textarea>
                     <label>Notes</label>
@@ -100,10 +113,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDeleteTrx(id) {
+        @if(session('success'))
             Swal.fire({
-                title: 'Are you sure?',
-                text: 'This transaction will be deleted!',
+                icon: 'success',
+                title: '{{ session('success') }}',
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        @endif
+        function confirmDeleteTrx(TrxId) {
+            Swal.fire({
+                title: 'Are you sure you want to cancel the Booking?',
+                text: 'This Booking will be deleted!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#B82020',
@@ -111,13 +135,13 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`/admin/trx-room-detail/${id}`)
+                    axios.delete(`/admin/trx-room-booking/${TrxId}`)
                         .then(response => {
                             window.location.reload();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
-                                text: 'The transaction has been deleted.',
+                                text: 'The Booking List has been deleted.',
                                 toast: true,
                                 position: 'top',
                                 showConfirmButton: false,
@@ -294,4 +318,13 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("input[name='TimeIn']", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
+    </script>
 @endsection

@@ -62,7 +62,8 @@ Route::middleware(['auth.check:admin'])->group(function () {
     Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
 
     Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
-    Route::get('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
+    Route::delete('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.trx-room-booking.destroy');
+    Route::post('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
 });
 Route::middleware(['auth.check:user'])->group(function () {
     Route::get('dashboard-user', [DashboardUserController::class, 'index'])->name('user.index');

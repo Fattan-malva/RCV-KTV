@@ -11,19 +11,24 @@ class TrxRoomBookingController extends Controller
     public function index()
     {
         $bookinglist = TrxRoomBooking::all();
-        return view('admin.rooms.booking', compact('bookinglist'));
+        $rooms = \App\Models\Room::all(); // Ambil semua room
+        return view('admin.rooms.booking', compact('bookinglist', 'rooms'));
     }
 
     public function store(Request $request)
     {
+        // Generate TrxId otomatis
+        $trxId = 'TRX-' . str_replace(['-', ' ', ':', '.'], '', now()->format('Y-m-d H:i:s.u'));
+
+        // Gabungkan TrxId ke request
+        $request->merge(['TrxId' => $trxId]);
+
         $validated = $request->validate([
             'TrxId' => 'required',
-            'TrxDate' => 'required|date',
-            'TrxTime' => 'required',
             'RoomId' => 'required',
             'GuestId' => 'nullable',
             'GuestName' => 'required',
-            'TimeIn' => 'required', 
+            'TimeIn' => 'required',
             'Notes' => 'nullable',
             'BookPack' => 'nullable',
         ]);
@@ -32,9 +37,9 @@ class TrxRoomBookingController extends Controller
         return redirect()->route('admin.rooms.booking')->with('success', 'Booking List added!');
     }
 
-    public function destroy($id)
+    public function destroy($TrxId)
     {
-        TrxRoomBooking::findOrFail($id)->delete();
+        TrxRoomBooking::where('TrxId', $TrxId)->delete();
         return response()->json(['success' => true]);
     }
 }
