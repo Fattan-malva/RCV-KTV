@@ -157,7 +157,6 @@
             color: #ff3e1d !important;
             border-color: transparent;
             background: #ffe0db;
-            border-radius: 8px;
         }
 
         .btn-label-danger:hover {
@@ -165,7 +164,6 @@
             background: #ff3e1d;
             border-color: #ff3e1d;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
         }
 
         /* No Transition Class */

@@ -83,29 +83,29 @@ class RoomController extends Controller
         }
         return redirect()->route('admin.rooms')->with('success', 'Room created successfully.');
     }
-   public function edit($id)
-{
-    $room = Room::findOrFail($id);
-    $categories = RoomCategory::all();
+    public function edit($id)
+    {
+        $room = Room::findOrFail($id);
+        $categories = RoomCategory::all();
 
-    $trx = \App\Models\TrxRoomDetail::where('RoomId', $room->roomId)
-        ->whereNull('CheckOutTime')
-        ->orderByDesc('TrxDate')
-        ->first();
+        $trx = \App\Models\TrxRoomDetail::where('RoomId', $room->roomId)
+            ->whereNull('CheckOutTime')
+            ->orderByDesc('TrxDate')
+            ->first();
 
-    // Hanya ambil booking yang TimeIn >= sekarang
-    $bookings = \App\Models\TrxRoomBooking::where('RoomId', $room->roomId)
-        ->where('TimeIn', '>=', now())
-        ->orderBy('TimeIn', 'asc')
-        ->get(['GuestName', 'TimeIn']);
+        // Hanya ambil booking yang TimeIn >= sekarang
+        $bookings = \App\Models\TrxRoomBooking::where('RoomId', $room->roomId)
+            ->where('TimeIn', '>=', now())
+            ->orderBy('TimeIn', 'asc')
+            ->get(['GuestName', 'TimeIn']);
 
-    return response()->json([
-        'room' => $room,
-        'categories' => $categories,
-        'trx' => $trx,
-        'bookings' => $bookings,
-    ]);
-}
+        return response()->json([
+            'room' => $room,
+            'categories' => $categories,
+            'trx' => $trx,
+            'bookings' => $bookings,
+        ]);
+    }
 
     public function update(Request $request, $id)
     {

@@ -49,12 +49,12 @@
                                 <td>{{ $booking->Notes ?? '-' }}</td>
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
                                 <td>
+                                    <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
+                                        <i class="fa fa-clock"></i> Reschedule
+                                    </button>
                                     <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrx('{{ $booking->TrxId }}')">
                                         <i class="fa fa-times"></i>
                                         Cancel Booking
-                                    </button>
-                                    <button class="btn btn-warning btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
-                                        <i class="fa fa-edit"></i> Edit
                                     </button>
                                 </td>
                             </tr>
