@@ -641,9 +641,8 @@
         </div>
 
         <!-- Room Card -->
-        <div class="card container-room mb-4">
+   
            @livewire('room-realtime')
-        </div>
 
         <!-- Modal Update -->
         <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
@@ -669,6 +668,10 @@
                                     <label for="notes" class="form-label">Notes</label>
                                     <textarea id="notes" name="notes" class="form-control"></textarea>
                                 </div>
+                                <!-- <div class="mb-3 col-md-6">
+                                    <label for="tablet_number" class="form-label">No. Tablet</label>
+                                    <textarea id="tablet_number" name="tablet_number" class="form-control"></textarea>
+                                </div> -->
                                 <div class="mb-3 col-md-6">
                                     <label for="roomCategory" class="form-label">Category</label>
                                     <select id="roomCategory" name="room_category_id" class="form-select" required disabled>
@@ -906,6 +909,7 @@
                     $('#updateRoomModal #roomName').val(data.room.name);
                     $('#updateRoomModal #guestName').val(data.trx ? data.trx.GuestName : '');
                     $('#updateRoomModal #notes').val(data.trx ? data.trx.Notes : '');
+                    $('#updateRoomModal #tablet_number').val(data.trx ? data.room.tablet_number : '');
                     $('#updateRoomModal #roomCategory').html('');
                     data.categories.forEach(category => {
                         $('#updateRoomModal #roomCategory').append(`

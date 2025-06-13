@@ -13,7 +13,7 @@ class Room extends Model
     protected $table = 'rooms';
 
     // Mass assignable attributes
-    protected $fillable = ['name', 'roomId', 'room_category_id', 'capacity', 'available'];
+    protected $fillable = ['name', 'roomId', 'room_category_id', 'capacity','tablet_number', 'available'];
 
     // Relationship with RoomCategory model
     public function category()

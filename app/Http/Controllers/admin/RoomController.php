@@ -114,6 +114,7 @@ class RoomController extends Controller
             'room_category_id' => 'required|exists:room_categories,id',
             'capacity' => 'required|integer|min:1',
             'available' => 'required|integer',
+            'tablet_number' => 'nullable|string|max:255',
             'guest_name' => 'required|string|max:255',
             'notes' => 'nullable|string|max:255',
         ]);
