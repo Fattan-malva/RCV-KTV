@@ -1,4 +1,5 @@
 @extends('layouts.appAdmin')
+@section('title', 'Account Detail')
 @section('header_title')
     <a href="{{ route('admin.user-management') }}" class="text-decoration-none text-black">
         Customers

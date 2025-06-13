@@ -1,4 +1,5 @@
 @extends('layouts.appAdmin')
+@section('title', 'Account Management')
 @section('header_title', 'Customers')
 @section('content')
     <div class="row">
@@ -6,7 +7,7 @@
             <div class="card p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h1>Management Account</h1>
+                        <h1>Account Management</h1>
                         <p>User management controls system access, assigns roles, and tracks activities to ensure security
                             and efficiency.</p>
                         @php

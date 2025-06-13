@@ -1,4 +1,5 @@
 @extends('layouts.appAdmin')
+@section('title', 'History Transaction')
 @section('header_title', 'Room Transactions')
 @section('content')
     <div class="container-content" style="margin-right: 25px;">

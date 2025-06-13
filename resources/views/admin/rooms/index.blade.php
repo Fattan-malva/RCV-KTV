@@ -1,4 +1,5 @@
 @extends('layouts.appAdmin')
+@section('title', 'Rooms-KTV')
 @section('header_title', 'Rooms-KTV')
 @section('content')
     <style>
