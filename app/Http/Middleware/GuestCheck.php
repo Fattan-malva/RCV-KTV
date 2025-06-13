@@ -20,10 +20,10 @@ class GuestCheck
         if ($request->session()->has('user_id')) {
             // Get user role
             $userRole = $request->session()->get('user_role');
-            
+
             // Redirect based on role
-            if ($userRole == 'admin') {
-                return redirect()->route('admin.dashboard')->with('fail', 'Anda sudah login sebagai admin');
+            if ($userRole == 'admin' || $userRole == 'superadmin') {
+                return redirect()->route('admin.dashboard')->with('fail', 'Anda sudah login sebagai admin/superadmin');
             } elseif ($userRole == 'user') {
                 return redirect()->route('user.index')->with('fail', 'Anda sudah login sebagai user');
             }

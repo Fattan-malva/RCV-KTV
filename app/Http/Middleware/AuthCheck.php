@@ -12,6 +12,7 @@ class AuthCheck
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @param  string|null  $role
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next, $role = null)
@@ -32,9 +33,16 @@ class AuthCheck
                 return redirect('login')->with('fail', 'User tidak ditemukan');
             }
         }
-        if ($role && $userRole !== $role) {
-            return redirect('login')->with('fail', 'Anda tidak memiliki akses ke halaman ini');
+
+        // Mendukung multi-role, misal: auth.check:adminorsuperadmin
+        if ($role) {
+            // Pisahkan role dengan | (pipe), contoh: admin|superadmin
+            $allowedRoles = explode('|', str_replace('adminorsuperadmin', 'admin|superadmin', $role));
+            if (!in_array($userRole, $allowedRoles)) {
+                return redirect('login')->with('fail', 'Anda tidak memiliki akses ke halaman ini');
+            }
         }
+
         $response = $next($request);
         $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
         $response->headers->set('Pragma', 'no-cache');

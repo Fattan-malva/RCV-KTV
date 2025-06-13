@@ -268,11 +268,11 @@
         <li
             class="{{ request()->routeIs('admin.user-management') || request()->routeIs('admin.customer-edit') ? 'active' : '' }}">
             <a href="{{ route('admin.user-management') }}" class="d-flex align-items-center">
-                <i class="fas fa-users"></i> <span>Customers</span>
+                <i class="fas fa-users"></i> <span>Account</span>
             </a>
         </li>
 
-        <li><a href="#" class="d-flex align-items-center"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+        <!-- <li><a href="#" class="d-flex align-items-center"><i class="fas fa-cog"></i> <span>Settings</span></a></li> -->
     </ul>
 
     <div class="sidebar-logout-card-user">

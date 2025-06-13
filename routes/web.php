@@ -42,7 +42,7 @@ Route::middleware(['guest.check'])->group(function () {
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['auth.check:admin'])->group(function () {
+Route::middleware(['auth.check:admin|superadmin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('customer', [UserManagementController::class, 'index'])->name('admin.user-management');
     Route::post('customer-store', [UserManagementController::class, 'store'])->name('admin.customer-store');
