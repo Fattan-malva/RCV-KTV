@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="{{ asset('img/B.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('img/icontitle.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
     <style>
         body {
@@ -21,7 +21,7 @@
             flex-direction: column;
             min-height: 100vh;
             font-family: 'Jost', sans-serif;
-            background: linear-gradient(to bottom, rgb(41, 12, 12), rgb(99, 43, 43), rgb(62, 36, 36));
+            background: linear-gradient(to bottom, rgb(22, 41, 70), #696cff, rgb(40, 36, 62));
             overflow: hidden;
         }
 
@@ -96,7 +96,7 @@
             justify-content: center;
             display: block;
             color: #fff;
-            background: rgb(138, 59, 59);
+            background: #696cff;
             font-size: 1em;
             font-weight: bold;
             margin-top: 5px;
@@ -108,7 +108,7 @@
         }
 
         button:hover {
-            background: rgb(184, 68, 68);
+            background: rgb(42, 79, 138);
         }
 
         button[type="button-google"] {
@@ -160,7 +160,7 @@
         }
 
         .login label {
-            color: rgb(138, 59, 59);
+            color: rgb(74, 106, 214);
             transform: scale(.6);
         }
 
@@ -416,7 +416,7 @@
                 justify-content: center;
                 display: block;
                 color: #fff;
-                background: rgb(138, 59, 59);
+                background: rgb(74, 106, 214);
                 font-size: 0.9em;
                 /* Smaller font size */
                 font-weight: bold;
@@ -488,7 +488,7 @@
             }
 
             .login label {
-                color: rgb(138, 59, 59);
+                color: rgb(74, 106, 214);
                 transform: scale(.5);
                 /* Smaller scale */
             }
@@ -577,11 +577,9 @@
 </head>
 
 <body>
-    <div class="logo-container">
-        <img src="{{asset('img/logo.png')}}" alt="Logo" class="logo-bfashion">
-    </div>
+
     <div class="main">
-        <input type="checkbox" id="chk" aria-hidden="true" @if(session('error')) checked @endif>
+        <input type="checkbox" id="chk" aria-hidden="true" checked @if(session('error')) checked @endif>
         <!-- Sign up form -->
         <div class="signup">
             <script>
@@ -648,7 +646,7 @@
                 <input type="hidden" name="login_type" value="Register Account">
 
                 <div class="back-home-link d-flex justify-content-between align-items-center">
-                    <p><a href="{{ route('landing.index') }}">Back to Home?</a></p>
+
                     <p class="continue-with-google">
                         <a href="/auth/redirect"
                             class="btn btn-outline-primary d-flex align-items-center continue-google"
@@ -718,35 +716,40 @@
     </div>
 
     <script>
-        // Toggle password visibility for signup password field
         const togglePassword = document.getElementById('togglePassword');
         const password = document.getElementById('password');
 
-        togglePassword.addEventListener('click', function () {
-            const type = password.type === 'password' ? 'text' : 'password';
-            password.type = type;
-            togglePassword.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
-        });
+        if (togglePassword && password) {
+            togglePassword.addEventListener('click', function () {
+                const type = password.type === 'password' ? 'text' : 'password';
+                password.type = type;
+                togglePassword.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
+            });
+        }
 
         // Toggle password visibility for signup confirm password field
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
         const confirmPassword = document.getElementById('password_confirmation');
 
-        toggleConfirmPassword.addEventListener('click', function () {
-            const type = confirmPassword.type === 'password' ? 'text' : 'password';
-            confirmPassword.type = type;
-            toggleConfirmPassword.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
-        });
+        if (toggleConfirmPassword && confirmPassword) {
+            toggleConfirmPassword.addEventListener('click', function () {
+                const type = confirmPassword.type === 'password' ? 'text' : 'password';
+                confirmPassword.type = type;
+                toggleConfirmPassword.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
+            });
+        }
 
         // Toggle password visibility for login password field
         const togglePasswordLogin = document.getElementById('togglePassword-login');
         const loginPassword = document.querySelector('.login #password');
 
-        togglePasswordLogin.addEventListener('click', function () {
-            const type = loginPassword.type === 'password' ? 'text' : 'password';
-            loginPassword.type = type;
-            togglePasswordLogin.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
-        });
+        if (togglePasswordLogin && loginPassword) {
+            togglePasswordLogin.addEventListener('click', function () {
+                const type = loginPassword.type === 'password' ? 'text' : 'password';
+                loginPassword.type = type;
+                togglePasswordLogin.innerHTML = type === 'password' ? '<i class="bx bx-show"></i>' : '<i class="bx bx-hide"></i>';
+            });
+        }
     </script>
 </body>
 
