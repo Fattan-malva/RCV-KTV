@@ -36,10 +36,17 @@
                     </thead>
                     <tbody>
                         @foreach ($bookinglist as $index => $booking)
-                            <tr>
+                            @php
+                                $isExpired = $booking->TimeIn && \Carbon\Carbon::parse($booking->TimeIn)->lt(\Carbon\Carbon::now());
+                            @endphp
+                            <tr @if($isExpired) style="background-color: #f0f0f0; color: #aaa;" @endif>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ \Carbon\Carbon::parse($booking->TrxDate)->format('d M Y') }}</td>
-                                <td>{{ $booking->TimeIn ? \Carbon\Carbon::parse($booking->TimeIn)->format('d M Y H:i') : '-' }}
+                                <td>
+                                    {{ $booking->TimeIn ? \Carbon\Carbon::parse($booking->TimeIn)->format('d M Y H:i') : '-' }}
+                                    @if($isExpired)
+                                        <span class="badge bg-secondary ms-2">Expired</span>
+                                    @endif
                                 </td>
                                 <td>{{ $booking->RoomId }}</td>
                                 <td>
@@ -50,13 +57,17 @@
                                 <td>{{ $booking->Notes ?? '-' }}</td>
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
-                                        <i class="fa fa-clock"></i> Reschedule
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrx('{{ $booking->TrxId }}')">
-                                        <i class="fa fa-times"></i>
-                                        Cancel Booking
-                                    </button>
+                                    @if(!$isExpired)
+                                        <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
+                                            <i class="fa fa-clock"></i> Reschedule
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrx('{{ $booking->TrxId }}')">
+                                            <i class="fa fa-times"></i>
+                                            Cancel Booking
+                                        </button>
+                                    @else
+                                        <span class="text-muted">No Action</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
