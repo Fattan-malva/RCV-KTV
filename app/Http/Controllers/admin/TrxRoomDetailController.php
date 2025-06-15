@@ -13,14 +13,20 @@ class TrxRoomDetailController extends Controller
         $date = $request->query('date');
         $typecheckin = $request->query('typecheckin');
 
+        // Tambahan: Ambil tanggal 2 bulan terakhir dari sekarang
+        $twoMonthsAgo = now()->subMonths(2)->format('Y-m-d');
+
         if ($date) {
             $query = TrxRoomDetail::where('TrxDate', $date);
             if ($typecheckin === 'guest') {
                 $query->whereIn('TypeCheckIn', [2, 3]);
             }
+            // Filter hanya data 2 bulan terakhir
+            $query->where('TrxDate', '>=', $twoMonthsAgo);
             $trxRoomDetails = $query->get();
         } else {
-            $trxRoomDetails = TrxRoomDetail::all();
+            // Filter hanya data 2 bulan terakhir
+            $trxRoomDetails = TrxRoomDetail::where('TrxDate', '>=', $twoMonthsAgo)->get();
         }
         return view('admin.rooms.detail', compact('trxRoomDetails', 'date'));
     }

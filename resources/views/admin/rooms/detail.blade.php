@@ -9,9 +9,9 @@
                     <h1>Transaction List</h1>
                     <p>Manage room transaction details, check-in/out, and guest information.</p>
                     <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
-                                <i class="fa-solid fa-plus"></i> Add New Transaction
-                            </button> -->
+                                    data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
+                                    <i class="fa-solid fa-plus"></i> Add New Transaction
+                                </button> -->
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/karaokeroom.png') }}" alt="Image" class="img-fluid"
@@ -181,10 +181,10 @@
                     lengthMenu: "_MENU_",
                     info: "Showing _START_ to _END_ of _TOTAL_ entries",
                     search: "",
-                }
+                },
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
             });
             $('#trxRoomTable_filter input').attr('placeholder', 'Search...').css('padding-left', '25px');
-            $('#trxRoomTable_filter input').before('<i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);"></i>');
         });
     </script>
     <style>

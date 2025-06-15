@@ -284,10 +284,10 @@
                     lengthMenu: "_MENU_",
                     info: "Showing _START_ to _END_ of _TOTAL_ entries",
                     search: "",
-                }
+                },
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
             });
             $('#trxRoomTable_filter input').attr('placeholder', 'Search...').css('padding-left', '25px');
-            $('#trxRoomTable_filter input').before('<i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);"></i>');
         });
     </script>
     <style>
