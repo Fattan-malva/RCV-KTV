@@ -205,6 +205,7 @@
                             <label for="role" class="form-label">Role</label>
                             <select class="form-control editable" id="role" name="role" required disabled>
                                 <option value="admin" {{ $customer->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="kasir" {{ $customer->role == 'kasir' ? 'selected' : '' }}>Kasir</option>
                                 <option value="user" {{ $customer->role == 'user' ? 'selected' : '' }}>User</option>
                             </select>
                         </div>

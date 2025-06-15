@@ -42,13 +42,9 @@ Route::middleware(['guest.check'])->group(function () {
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['auth.check:admin|superadmin'])->group(function () {
+Route::middleware(['auth.check:admin|superadmin|kasir'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('customer', [UserManagementController::class, 'index'])->name('admin.user-management');
-    Route::post('customer-store', [UserManagementController::class, 'store'])->name('admin.customer-store');
-    Route::post('customer-edit', [UserManagementController::class, 'edit'])->name('admin.customer-edit');
-    Route::put('customer-update/{id}', [UserManagementController::class, 'update'])->name('admin.customer-update');
-    Route::delete('customer-destroy/{id}', [UserManagementController::class, 'destroy'])->name('admin.user-customer-destroy');
+   
 
     Route::get('admin-rooms', [RoomController::class, 'index'])->name('admin.rooms');
     Route::post('rooms-store', [RoomController::class, 'store'])->name('admin.rooms-store');
@@ -64,9 +60,18 @@ Route::middleware(['auth.check:admin|superadmin'])->group(function () {
     Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
     Route::delete('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.trx-room-booking.destroy');
     Route::get('admin/trx-room-booking/{TrxId}/edit', [TrxRoomBookingController::class, 'edit'])->name('admin.trx-room-booking.edit');
-Route::put('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'update'])->name('admin.trx-room-booking.update');
+    Route::put('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'update'])->name('admin.trx-room-booking.update');
     Route::post('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
 });
 Route::middleware(['auth.check:user'])->group(function () {
     Route::get('dashboard-user', [DashboardUserController::class, 'index'])->name('user.index');
 });
+
+Route::middleware(['auth.check:admin|superadmin'])->group(function () {
+    Route::get('customer', [UserManagementController::class, 'index'])->name('admin.user-management');
+    Route::post('customer-store', [UserManagementController::class, 'store'])->name('admin.customer-store');
+    Route::post('customer-edit', [UserManagementController::class, 'edit'])->name('admin.customer-edit');
+    Route::put('customer-update/{id}', [UserManagementController::class, 'update'])->name('admin.customer-update');
+    Route::delete('customer-destroy/{id}', [UserManagementController::class, 'destroy'])->name('admin.user-customer-destroy');
+});
+

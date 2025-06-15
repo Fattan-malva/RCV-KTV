@@ -262,15 +262,21 @@
         </li>
         <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
             <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
-                <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>Transactions List</span>
             </a>
         </li>
-        <li
-            class="{{ request()->routeIs('admin.user-management') || request()->routeIs('admin.customer-edit') ? 'active' : '' }}">
-            <a href="{{ route('admin.user-management') }}" class="d-flex align-items-center">
-                <i class="fas fa-users"></i> <span>Account</span>
-            </a>
-        </li>
+        @php
+            $role = session('user_role');
+        @endphp
+        @if ($role === 'superadmin' || $role === 'admin')
+            <li
+                class="{{ request()->routeIs('admin.user-management') || request()->routeIs('admin.customer-edit') ? 'active' : '' }}">
+                <a href="{{ route('admin.user-management') }}" class="d-flex align-items-center">
+                    <i class="fas fa-users"></i> <span>Account</span>
+                </a>
+            </li>
+        @endif
+
 
         <!-- <li><a href="#" class="d-flex align-items-center"><i class="fas fa-cog"></i> <span>Settings</span></a></li> -->
     </ul>
@@ -283,9 +289,11 @@
                 </div>
                 <div class="ms-2" style="overflow:hidden;">
                     <div class="fw-bold sidebar-user-name" style="font-size:1rem; color:black;">
-                        {{ session('user_name') }}</div>
+                        {{ session('user_name') }}
+                    </div>
                     <div class="text-muted sidebar-user-username" style="font-size:0.85rem;">
-                        {{ session('user_username') }}</div>
+                        {{ session('user_username') }}
+                    </div>
                 </div>
             </div>
             <form action="{{ route('logout') }}" method="POST" id="logoutFormSidebar"

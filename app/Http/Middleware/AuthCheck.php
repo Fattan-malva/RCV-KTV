@@ -37,7 +37,7 @@ class AuthCheck
         // Mendukung multi-role, misal: auth.check:adminorsuperadmin
         if ($role) {
             // Pisahkan role dengan | (pipe), contoh: admin|superadmin
-            $allowedRoles = explode('|', str_replace('adminorsuperadmin', 'admin|superadmin', $role));
+            $allowedRoles = explode('|', str_replace('adminorsuperadminorkasir', 'admin|superadmin|kasir', $role));
             if (!in_array($userRole, $allowedRoles)) {
                 return redirect('login')->with('fail', 'Anda tidak memiliki akses ke halaman ini');
             }

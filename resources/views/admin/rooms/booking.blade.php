@@ -138,7 +138,7 @@
                     <div class="modal-body">
                         <input type="hidden" id="editTrxId" name="TrxId">
                         <div class="mui-input-container">
-                            <input type="text" id="editGuestName" name="GuestName" required>
+                            <input type="text" id="editGuestName" name="GuestName" required readonly>
                             <label>Guest Name</label>
                         </div>
                         <div class="mui-input-container">

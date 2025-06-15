@@ -178,6 +178,7 @@
                     <select class="mui-select @error('role') is-invalid @enderror" id="role" name="role" required>
                         <option value="" disabled selected>Choose Role</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="kasir" {{ old('role') == 'kasir' ? 'selected' : '' }}>Kasir</option>
                         <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
                     </select>
                     <label for="role" class="form-label">Role</label>

@@ -22,7 +22,7 @@ class GuestCheck
             $userRole = $request->session()->get('user_role');
 
             // Redirect based on role
-            if ($userRole == 'admin' || $userRole == 'superadmin') {
+            if ($userRole == 'admin' || $userRole == 'superadmin' || $userRole == 'kasir') {
                 return redirect()->route('admin.dashboard')->with('fail', 'Anda sudah login sebagai admin/superadmin');
             } elseif ($userRole == 'user') {
                 return redirect()->route('user.index')->with('fail', 'Anda sudah login sebagai user');

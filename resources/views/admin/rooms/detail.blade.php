@@ -1,12 +1,12 @@
 @extends('layouts.appAdmin')
-@section('title', 'History Transaction')
+@section('title', 'Transaction List')
 @section('header_title', 'Room Transactions')
 @section('content')
     <div class="container-content" style="margin-right: 25px;">
         <div class="card p-4">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <h1>History Transaction</h1>
+                    <h1>Transaction List</h1>
                     <p>Manage room transaction details, check-in/out, and guest information.</p>
                     <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">

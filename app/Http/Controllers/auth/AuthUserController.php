@@ -20,7 +20,7 @@ class AuthUserController extends Controller
     {
         if ($request->session()->has('user_id')) {
             $role = $request->session()->get('user_role');
-            if ($role === 'admin' || $role === 'superadmin') {
+            if ($role === 'admin' || $role === 'superadmin' || $role === 'kasir') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.index');
@@ -47,7 +47,7 @@ class AuthUserController extends Controller
             $request->session()->put('user_role', $customer->role);
             $request->session()->put('user_name', $customer->name);
 
-            if ($customer->role === 'admin' || $customer->role === 'superadmin') {
+            if ($customer->role === 'admin' || $customer->role === 'superadmin' || $customer->role === 'kasir') {
                 return redirect()->route('admin.dashboard')->with('success', 'Success login.');
             } else {
                 return redirect()->route('user.index')->with('success', 'Success login.');

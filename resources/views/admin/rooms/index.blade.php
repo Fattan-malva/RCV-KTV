@@ -388,73 +388,16 @@
 
     <div class="container-content" style="margin-right: 25px;">
         <!-- Row for Small Cards -->
-        <div class="row">
-            <div class="col-12 mb-3">
-                <div class="card-container">
-                    <!-- Available Rooms Card -->
-                    <div class="card small">
-                        <div class="d-flex justify-content-between align-items-center" id="available-icon"
-                            data-availability="1">
-                            <div class="left-content">
-                                <h5>Available</h5>
-                                <p>{{ $availableRoomCount }} Rooms</p>
-                            </div>
-                            <div class="right-content-available">
-                                <i class="fas fa-couch" id="room-icon" data-availability="1"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Unavailable Rooms Card -->
-                    <div class="card small">
-                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
-                            data-availability="0">
-                            <div class="left-content">
-                                <h5>Used</h5>
-                                <p>{{ $unavailableRoomCount }} Rooms</p>
-                            </div>
-                            <div class="right-content-unavailable">
-                                <i class="fas fa-couch" id="room-icon" data-availability="1"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Guest Card -->
-                   <a href="{{ route('admin.rooms.detail', ['date' => now()->format('Y-m-d'), 'typecheckin' => 'guest']) }}" style="cursor:pointer; text-decoration: none; color: inherit;">
-                        <div class="card small" style="cursor:pointer;">
-                            <div class="d-flex justify-content-between align-items-center" id="unavailable-icon" data-availability="0">
-                                <div class="left-content">
-                                    <h5>Room Today's</h5>
-                                    <p>{{ $roomToday }} Rooms</p>
-                                </div>
-                                <div class="right-content-guest">
-                                    <i class="fa-solid fa-building" id="unavailable-icon" data-availability="0"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- All Room Card -->
-                    <div class="card small" id="reset-button">
-                        <div class="d-flex justify-content-between align-items-center" id="unavailable-icon"
-                            data-availability="0">
-                            <div class="left-content">
-                                <h5>All Rooms</h5>
-                                <p>{{ $allRoomCount }}</p>
-                            </div>
-                            <div class="right-content-allroom">
-                                <i class="fas fa-hotel" id="unavailable-icon" data-availability="0"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+     
 
         <!-- Filter Room -->
         <!-- <h5>Search Filter</h5> -->
-        <form method="GET" action="{{ route('admin.rooms') }}" id="filter-form">
-            <div class="row" style="display: none;">
+        @php
+            $role = session('user_role');
+        @endphp
+        @if ($role == 'superadmin')
+            <form method="GET" action="{{ route('admin.rooms') }}" id="filter-form">
+            <div class="row">
                 <div class="col-8">
                     <div class="filter-container mb-3">
                         <div class="filter">
@@ -496,6 +439,8 @@
                 </div>
             </div>
         </form>
+        @endif
+    
 
         <!-- Offcanvas for Creating Room -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateRoom"
