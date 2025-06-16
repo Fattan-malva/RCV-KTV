@@ -108,7 +108,7 @@
                     @error('TimeIn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
-                    <input type="text" name="BookPack" class="@error('BookPack') is-invalid @enderror">
+                    <input type="number" name="BookPack" class="@error('BookPack') is-invalid @enderror">
                     <label>Booking Package</label>
                     @error('BookPack')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>

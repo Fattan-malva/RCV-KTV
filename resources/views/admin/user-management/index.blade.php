@@ -17,7 +17,7 @@
                         @if ($role === 'superadmin')
                             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasCreateCustomer" aria-controls="offcanvasCreateCustomer">
-                                <i class="fa-solid fa-address-book"></i> Add New User
+                                <i class="fa-solid fa-address-book"></i> Add New User Account
                             </button>
                         @endif
                     </div>
@@ -91,14 +91,14 @@
                                                     <i class='bx bxs-trash' style="font-size: 20px;"></i>
                                                 </button>
                                                 <!-- Dropdown Button -->
-                                                <button class="btn btn-sm border-0 btn-action" data-bs-toggle="dropdown"
+                                                <!-- <button class="btn btn-sm border-0 btn-action" data-bs-toggle="dropdown"
                                                     aria-expanded="false" title="Option">
                                                     <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" href="#">Option 1</a></li>
                                                     <li><a class="dropdown-item" href="#">Option 2</a></li>
-                                                </ul>
+                                                </ul> -->
 
                                             </div>
                                         </td>
@@ -138,7 +138,7 @@
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateCustomer"
         aria-labelledby="offcanvasCreateCustomerLabel">
         <div class="offcanvas-header">
-            <h5 id="offcanvasCreateCustomerLabel">Add New Customer</h5>
+            <h5 id="offcanvasCreateCustomerLabel">Add New Account</h5>
         </div>
         <div class="offcanvas-body">
             <form action="{{ route('admin.customer-store') }}" method="POST">

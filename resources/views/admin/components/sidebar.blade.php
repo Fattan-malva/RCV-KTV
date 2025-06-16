@@ -262,7 +262,7 @@
         </li>
         <li class="{{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
             <a href="{{ route('admin.rooms.detail') }}" class="d-flex align-items-center">
-                <i class="fa-solid fa-clock-rotate-left"></i> <span>Transactions List</span>
+                <i class="fa-solid fa-clock-rotate-left"></i> <span>Trnsctn List</span>
             </a>
         </li>
         @php

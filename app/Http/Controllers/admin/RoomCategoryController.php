@@ -21,6 +21,7 @@ class RoomCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'id' => 'required|unique:room_categories',
             'name' => 'required|unique:room_categories',
             'description' => 'nullable',
         ]);

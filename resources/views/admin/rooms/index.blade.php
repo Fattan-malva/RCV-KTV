@@ -90,12 +90,14 @@
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            justify-content: center;
+            justify-content: flex-start;
+            margin-top: 2%;
+            padding-bottom: 2%;
         }
 
         .filter {
             flex: 1 1 calc(25% - 20px);
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -400,6 +402,13 @@
             <div class="row">
                 <div class="col-8">
                     <div class="filter-container mb-3">
+                         <div class="setting">
+                            <i class="fa-solid fa-arrows-rotate fa-xl" id="reset-button"></i>
+                        </div>
+                        <div class="setting" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateRoom"
+                            aria-controls="offcanvasCreateRoom" onclick="activateRoomTab()">
+                            <i class="fa-solid fa-gear fa-xl"></i> 
+                        </div>
                         <div class="filter">
                             <select name="category" id="room-category" class="form-select auto-submit">
                                 <option value="">All Category</option>
@@ -427,13 +436,6 @@
                                 <option value="3" {{ request('capacity') == '3' ? 'selected' : '' }}>3 Guests</option>
                                 <option value="4" {{ request('capacity') == '4' ? 'selected' : '' }}>4 Guests</option>
                             </select>
-                        </div>
-                        <div class="setting">
-                            <i class="fa-solid fa-arrows-rotate fa-xl" id="reset-button"></i>
-                        </div>
-                        <div class="setting" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCreateRoom"
-                            aria-controls="offcanvasCreateRoom" onclick="activateRoomTab()">
-                            <i class="fa-solid fa-gear fa-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -525,6 +527,16 @@
                 <div id="categoryForm" style="display: none;">
                     <form action="{{ route('admin.categories-store') }}" method="POST">
                         @csrf
+                        <!-- Description Input -->
+                        <div class="mui-input-container">
+                            <input type="number" id="description" name="id"
+                                class="@error('id') is-invalid @enderror" placeholder=" "
+                                value="{{ old('id') }}" required />
+                            <label for="id">Category Id</label>
+                            @error('id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <!-- Category Name Input -->
                         <div class="mui-input-container">
                             <input type="text" id="name" name="name" class="@error('name') is-invalid @enderror"
