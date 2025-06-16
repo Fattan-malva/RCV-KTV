@@ -4,14 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TrxRoomBooking;
+use App\Models\TrxRoomBookingLog;
 use Illuminate\Http\Request;
 
 class TrxRoomBookingController extends Controller
 {
     public function index()
     {
-        $bookinglist = TrxRoomBooking::all();
-        $rooms = \App\Models\Room::all(); // Ambil semua room
+        $now = now();
+
+        $twoMonthsAgo = now()->subMonths(2);
+
+        $bookinglist = \App\Models\TrxRoomBooking::where('TrxDate', '>=', $twoMonthsAgo)
+            ->orderByRaw(
+                "CASE WHEN TimeIn >= ? THEN 0 ELSE 1 END, TimeIn ASC",
+                [$now]
+            )->get();
+
+        $rooms = \App\Models\Room::all();
         return view('admin.rooms.booking', compact('bookinglist', 'rooms'));
     }
 
@@ -56,9 +66,29 @@ class TrxRoomBookingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function destroy($TrxId)
+    public function destroy(Request $request, $TrxId)
     {
-        TrxRoomBooking::where('TrxId', $TrxId)->delete();
-        return response()->json(['success' => true]);
+        $reason = $request->input('Reason');
+        if (!$reason) {
+            return response()->json(['success' => false, 'message' => 'Reason is required'], 422);
+        }
+
+        $booking = TrxRoomBooking::where('TrxId', $TrxId)->first();
+        if ($booking) {
+            // Simpan ke log
+            TrxRoomBookingLog::create([
+                'TrxId' => $booking->TrxId,
+                'TrxDate' => $booking->TrxDate,
+                'TrxTime' => $booking->TrxTime,
+                'RoomId' => $booking->RoomId,
+                'GuestId' => $booking->GuestId,
+                'GuestName' => $booking->GuestName,
+                'TimeIn' => $booking->TimeIn,
+                'Reason' => $reason,
+            ]);
+            $booking->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
     }
 }

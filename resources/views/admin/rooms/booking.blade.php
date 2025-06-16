@@ -12,6 +12,7 @@
                         data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
                         <i class="fa-solid fa-plus"></i> Add New Booking List
                     </button>
+                    <button class="btn btn-secondary" id="showAllLogs">Show Booking Cancel</button>
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/bookinglist.png') }}" alt="Image" class="img-fluid"
@@ -61,7 +62,7 @@
                                         <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
                                             <i class="fa fa-clock"></i> Reschedule
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteTrx('{{ $booking->TrxId }}')">
+                                        <button class="btn btn-danger btn-sm" onclick="cancelBooking('{{ $booking->TrxId }}')">
                                             <i class="fa fa-times"></i>
                                             Cancel Booking
                                         </button>
@@ -171,6 +172,35 @@
             </div>
         </div>
     </div>
+    <!-- Modal Log -->
+    <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-large">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logModalLabel">All Booking Cancel Logs</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-responsive" id="logTable">
+                        <thead>
+                            <tr>
+                                <th>TrxId</th>
+                                <th>TrxDate</th>
+                                <th>TrxTime</th>
+                                <th>Room Name</th>
+                                <th>Guest Name</th>
+                                <th>Booking At</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data log akan diisi via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
@@ -223,50 +253,43 @@
                 });
             });
         });
-    </script>
-    <script>
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: '{{ session('success') }}',
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
-        @endif
-        function confirmDeleteTrx(TrxId) {
-            Swal.fire({
-                title: 'Are you sure you want to cancel the Booking?',
-                text: 'This Booking will be deleted!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#B82020',
-                cancelButtonColor: '#a6a4a4',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.delete(`/admin/trx-room-booking/${TrxId}`)
-                        .then(response => {
-                            window.location.reload();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: 'The Booking List has been deleted.',
-                                toast: true,
-                                position: 'top',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
-                            });
-                        })
-                        .catch(error => {
-                            Swal.fire('Error!', 'Something went wrong!', 'error');
-                        });
+        $('#showAllLogs').on('click', function () {
+            $.get('/admin/rooms/booking/logs', function (data) {
+                var rows = '';
+                if (data.length === 0) {
+                    rows = '<tr><td colspan="7" class="text-center">No log found</td></tr>';
+                } else {
+                    $.each(data, function (i, log) {
+                        rows += '<tr>' +
+                            '<td>' + log.TrxId + '</td>' +
+                            '<td>' + log.TrxDate + '</td>' +
+                            '<td>' + log.TrxTime + '</td>' +
+                            '<td>' + log.RoomId + '</td>' +
+                            '<td>' + log.GuestName + '</td>' +
+                            '<td>' + log.TimeIn + '</td>' +
+                            '<td>' + log.Reason + '</td>' +
+                            '</tr>';
+                    });
                 }
+                $('#logTable tbody').html(rows);
+                $('#logModal').modal('show');
             });
-        }
+        });
+        $('#logModal').on('shown.bs.modal', function () {
+            // Jika sudah ada instance DataTable, destroy dulu
+            if ($.fn.DataTable.isDataTable('#logTable')) {
+                $('#logTable').DataTable().destroy();
+            }
+            // Inisialisasi ulang DataTable setelah data dimasukkan
+            $('#logTable').DataTable({
+                responsive: true,
+                paging: true,
+                searching: true,
+                ordering: true,
+                lengthChange: true,
+                pageLength: 10
+            });
+        });
         $(document).ready(function () {
             $('#trxRoomTable').DataTable({
                 responsive: true,
@@ -290,12 +313,17 @@
             $('#trxRoomTable_filter input').attr('placeholder', 'Search...').css('padding-left', '25px');
         });
     </script>
+
     <style>
         /* Copy style dari user management agar konsisten */
         .card {
             padding: 20px;
             border: none;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+
+        .modal-large {
+            max-width: 90vw;
         }
 
 

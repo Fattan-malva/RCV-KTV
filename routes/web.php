@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\auth\AuthUserController;
-use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController, TrxRoomDetailController, TrxRoomBookingController};
+use App\Http\Controllers\admin\{UserManagementController, DashboardController, RoomController, RoomCategoryController, TrxRoomDetailController, TrxRoomBookingController, TrxRoomBookingLogController};
 use App\Http\Controllers\user\{DashboardUserController};
 
 
@@ -44,7 +44,7 @@ Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth.check:admin|superadmin|kasir'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-   
+
 
     Route::get('admin-rooms', [RoomController::class, 'index'])->name('admin.rooms');
     Route::post('rooms-store', [RoomController::class, 'store'])->name('admin.rooms-store');
@@ -58,10 +58,11 @@ Route::middleware(['auth.check:admin|superadmin|kasir'])->group(function () {
     Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
 
     Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
-    Route::delete('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.trx-room-booking.destroy');
+    Route::delete('admin/rooms/booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.rooms.booking.destroy');
     Route::get('admin/trx-room-booking/{TrxId}/edit', [TrxRoomBookingController::class, 'edit'])->name('admin.trx-room-booking.edit');
     Route::put('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'update'])->name('admin.trx-room-booking.update');
     Route::post('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
+    Route::get('admin/rooms/booking/logs', [TrxRoomBookingLogController::class, 'allLogs'])->name('admin.rooms.booking.logs');
 });
 Route::middleware(['auth.check:user'])->group(function () {
     Route::get('dashboard-user', [DashboardUserController::class, 'index'])->name('user.index');
