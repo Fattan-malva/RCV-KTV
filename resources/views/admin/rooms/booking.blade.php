@@ -12,7 +12,8 @@
                         data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
                         <i class="fa-solid fa-plus"></i> Add New Booking List
                     </button>
-                    <button class="btn btn-secondary" id="showAllLogs">Show Booking Cancel</button>
+                    <button class="btn btn-secondary ms-2" id="showAllLogs"> <i class="fa-solid fa-list"></i> Show Booking
+                        Cancel</button>
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/bookinglist.png') }}" alt="Image" class="img-fluid"
@@ -203,6 +204,45 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Tambahkan di bagian script
+        function cancelBooking(trxId) {
+            Swal.fire({
+                title: 'Cancel Booking',
+                input: 'text',
+                inputLabel: 'Reason',
+                inputPlaceholder: 'Enter reason for cancellation',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Reason is required!';
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/rooms/booking/' + trxId,
+                        type: 'DELETE',
+                        data: {
+                            Reason: result.value,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Cancelled!', 'Booking has been cancelled.', 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error', xhr.responseJSON.message || 'Something went wrong.', 'error');
+                        }
+                    });
+                }
+            });
+        }
         $(document).ready(function () {
             // ...existing DataTable code...
 
@@ -287,7 +327,11 @@
                 searching: true,
                 ordering: true,
                 lengthChange: true,
-                pageLength: 10
+                pageLength: 10,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                language: {
+                    lengthMenu: "_MENU_",
+                }
             });
         });
         $(document).ready(function () {
