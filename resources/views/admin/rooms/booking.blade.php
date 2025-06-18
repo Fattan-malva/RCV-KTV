@@ -191,7 +191,7 @@
                                 <th>Room Name</th>
                                 <th>Guest Name</th>
                                 <th>Booking At</th>
-                                <th>Reason</th>
+                                <th class="text-wrap">Reason</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -307,7 +307,7 @@
                             '<td>' + log.RoomId + '</td>' +
                             '<td>' + log.GuestName + '</td>' +
                             '<td>' + log.TimeIn + '</td>' +
-                            '<td>' + log.Reason + '</td>' +
+                            '<td class="text-wrap">' + log.Reason + '</td>' +
                             '</tr>';
                     });
                 }
@@ -359,6 +359,13 @@
     </script>
 
     <style>
+        .text-wrap {
+            white-space: normal !important;
+            word-break: break-word;
+            max-width: 200px;
+            /* Atur sesuai kebutuhan */
+        }
+
         /* Copy style dari user management agar konsisten */
         .card {
             padding: 20px;

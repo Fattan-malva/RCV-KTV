@@ -617,6 +617,7 @@
                            
                             <div class="row">
                                  <div id="roomBookingList" class="mb-3"></div>
+
                                  <input type="hidden" id="roomName" name="name" required>
                                 <div class="mb-3 col-md-6">
                                     <label for="guestName" class="form-label">Guest Name</label>

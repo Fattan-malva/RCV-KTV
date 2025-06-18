@@ -21,6 +21,7 @@
     <!-- Boxicons -->
     <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <style>
