@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\TrxRoomDetail;
+use App\Models\TrxRoomBookingLog;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -22,7 +23,11 @@ class DashboardController extends Controller
 
         $availableRoomCount = Room::whereIn('available', [1, 3, 5, 7])->count();
         $unavailableRoomCount = Room::whereIn('available', [2, 4, 6])->count();
-        $bookingList = TrxRoomBooking::where('TimeIn', '>=', Carbon::now()->toDateString())->count();
+        $now = now();
+        $bookingList = TrxRoomBooking::where('TimeIn', '>=', Carbon::now())->count();
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+        $bookingCanceled = TrxRoomBookingLog::whereBetween('TimeIn', [$startOfWeek, $endOfWeek])->count();
         $guestToday = TrxRoomDetail::where('TrxDate', now()->format('Y-m-d'))
             ->where('TypeCheckIn', [2, 3])
             ->count();
@@ -42,6 +47,11 @@ class DashboardController extends Controller
             ->whereIn('TypeCheckIn', [2, 3])
             ->get();
 
+        $roomActiveData = TrxRoomDetail::where('TrxDate', now()->format('Y-m-d'))
+            ->whereIn('TypeCheckIn', [2, 3])
+            ->whereNull('CheckOutTime')
+            ->get();
+
         return view('admin.dashboard', compact(
             'availableRoomCount',
             'unavailableRoomCount',
@@ -49,7 +59,9 @@ class DashboardController extends Controller
             'guestToday',
             'checkinReport',
             'bookinglistData',
-            'guestCheckinData'
+            'guestCheckinData',
+            'bookingCanceled',
+            'roomActiveData'
         ));
     }
 }

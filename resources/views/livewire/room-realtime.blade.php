@@ -97,7 +97,7 @@
                                             @if($isBlinking) blinking-room @endif" data-id="{{ $room->id }}">
                             <div style="display: flex; flex-direction: column; align-items: flex-start;">
                                 <div>
-                                    <i class="fas fa-door-closed room-icon"></i>
+                                    <i class="fas fa-couch room-icon"></i>
                                     <span class="room-name">{{ $room->name }}</span>
                                 </div>
                                 @if($room->currentTrx && $room->currentTrx->GuestName)
@@ -120,19 +120,19 @@
 
         <div class="legend" style="margin-top: 10%;">
             <div class="legend-card available-legend">
-                <i class="fas fa-door-closed legend-icon"></i>
+                <i class="fas fa-couch legend-icon"></i>
                 <span class="legend-name">Available</span>
             </div>
             <div class="legend-card unavailable-legend">
-                <i class="fas fa-door-closed legend-icon"></i>
+                <i class="fas fa-couch legend-icon"></i>
                 <span class="legend-name">Used</span>
             </div>
             <div class="legend-card mntc-legend">
-                <i class="fas fa-door-closed legend-icon"></i>
+                <i class="fas fa-couch legend-icon"></i>
                 <span class="legend-name">Maintenance</span>
             </div>
             <div class="legend-card oo-legend">
-                <i class="fas fa-door-closed legend-icon"></i>
+                <i class="fas fa-couch legend-icon"></i>
                 <span class="legend-name">OO</span>
             </div>
         </div>

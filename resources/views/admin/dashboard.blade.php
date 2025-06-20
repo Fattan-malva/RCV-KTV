@@ -9,7 +9,7 @@
         }
 
         .small {
-            padding: 13px 20px;
+            padding: 15px 20px;
             box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
             margin-right: 35px;
             margin-bottom: 15px;
@@ -26,7 +26,7 @@
         .left-content-booking-list,
         .left-content-room-used,
         .left-content-guest-todays,
-        .left-content-mingaji,
+        .left-content-booking-canceled,
         .left-content-totalgaji,
         .left-content-room-available {
             flex: 0 0 auto;
@@ -64,8 +64,8 @@
             margin-top: 10px;
         }
 
-        .left-content-mingaji i {
-            padding: 10px;
+        .left-content-booking-canceled i {
+            padding: 10px 15px;
             border-radius: 10%;
             font-size: 1.8rem;
             color: #FF3E1D;
@@ -144,6 +144,19 @@
             margin: 0;
             font-size: 0.9rem;
         }
+
+        .data-roomActive {
+            padding: 10px 0px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            background-color: rgba(248, 207, 82, 0.44);
+        }
+
+        .data-roomActive p {
+            color: black;
+            margin: 0;
+            font-size: 0.9rem;
+        }
     </style>
 
     <div class="row">
@@ -158,7 +171,7 @@
                 </div>
             </div>
             <div class="card p-4 mt-4">
-                <div class="d-flex flex-column" style="height: 320px;">
+                <div class="d-flex flex-column" style="height: 340px;">
                     <canvas id="checkinChart"></canvas>
                 </div>
             </div>
@@ -189,6 +202,19 @@
                 </div>
             </a>
 
+            <a href="{{ route('admin.rooms.detail', ['date' => now()->format('Y-m-d'), 'typecheckin' => 'guest']) }}"
+                style="cursor:pointer; text-decoration: none; color: inherit;">
+                <div class="card small">
+                    <div class="left-content-guest-todays" style="margin-right: 19px;">
+                        <i class="fas fa-users"></i>
+                        <h5>Today's Guest</h5>
+                    </div>
+                    <div class="right-content" style="margin-left: 27%;">
+                        <p>{{ $guestToday }}</p>
+                    </div>
+                </div>
+            </a>
+
             <a href="{{ route('admin.rooms.booking') }}" style="cursor:pointer; text-decoration: none; color: inherit;">
                 <div class="card small">
                     <div class="left-content-booking-list">
@@ -201,27 +227,13 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.rooms.detail', ['date' => now()->format('Y-m-d'), 'typecheckin' => 'guest']) }}"
-                style="cursor:pointer; text-decoration: none; color: inherit;">
-                <div class="card small">
-                    <div class="left-content-guest-todays" style="margin-right: 19px;">
-                        <i class="fas fa-users"></i>
-                        <h5>Guest Today's</h5>
-                    </div>
-                    <div class="right-content" style="margin-left: 27%;">
-                        <p>{{ $guestToday }}</p>
-                    </div>
-                </div>
-
-            </a>
-
             <div class="card small">
-                <div class="left-content-mingaji" style="margin-right: 19px;">
-                    <i class="fas fa-couch"></i>
-                    <h5>Content</h5>
+                <div class="left-content-booking-canceled" style="margin-right: 19px;">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h5>Booking Canceled</h5>
                 </div>
                 <div class="right-content" style="margin-left: 27%;">
-                    <p>100</p>
+                    <p>{{ $bookingCanceled }} this week</p>
                 </div>
             </div>
         </div>
@@ -282,8 +294,25 @@
         </div>
         <div class="col-md-4">
             <div class="card portrait-card" style="margin-right:35px;">
-                <h5>Portrait 3</h5>
-                <p>Content for portrait 3.</p>
+                <h5>Running Room's Now</h5>
+                <div class="potrait-list">
+                    @forelse($roomActiveData as $room)
+                        @php
+                            $checkInTime = \Carbon\Carbon::parse($room->CheckInTime);
+                        @endphp
+                        <div class="data-roomActive">
+                            <p>
+                                <strong style="font-size: large;">{{ $room->RoomId }} : </strong>
+                                {{ $room->GuestName }}
+                                Check-in at {{ $checkInTime->format('H:i') }}
+                            </p>
+                        </div>
+                    @empty
+                        <div class="data-roomActive">
+                            <p>No CheckIn Guest.</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>

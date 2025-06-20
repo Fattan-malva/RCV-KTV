@@ -26,7 +26,9 @@ class TrxRoomDetailController extends Controller
             $trxRoomDetails = $query->get();
         } else {
             // Filter hanya data 2 bulan terakhir
-            $trxRoomDetails = TrxRoomDetail::where('TrxDate', '>=', $twoMonthsAgo)->get();
+            $trxRoomDetails = TrxRoomDetail::where('TrxDate', '>=', $twoMonthsAgo)
+                ->orderBy('TrxDate', 'desc')
+                ->get();
         }
         return view('admin.rooms.detail', compact('trxRoomDetails', 'date'));
     }
