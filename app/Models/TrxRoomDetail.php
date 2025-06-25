@@ -13,7 +13,7 @@ class TrxRoomDetail extends Model
     protected $table = 'TrxRoomDetail';
     public $timestamps = false;
     // Mass assignable attributes
-    protected $fillable = ['TrxDate', 'CheckInTime','TypeCheckIn', 'CheckOutTime', 'TrxId', 'RoomId', 'GuestId', 'GuestName', 'Notes'];
+    protected $fillable = ['TrxDate', 'CheckInTime','TypeCheckIn', 'CheckOutTime', 'TrxId', 'RoomId', 'GuestId', 'GuestName','ReservationWith','TaxPackage', 'Notes'];
 
     // Relationship with RoomCategory model
     public function category()

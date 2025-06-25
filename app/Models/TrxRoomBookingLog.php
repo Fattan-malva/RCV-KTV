@@ -11,6 +11,6 @@ class TrxRoomBookingLog extends Model
 
     protected $table = 'TrxBookingLog';
     public $timestamps = false;
-    protected $fillable = ['TrxId', 'TrxDate', 'TrxTime', 'RoomId', 'GuestId', 'GuestName', 'TimeIn', 'Reason'];
+    protected $fillable = ['TrxId', 'TrxDate', 'TrxTime', 'RoomId', 'GuestId', 'GuestName','ReservationWith', 'TimeIn', 'Reason'];
 
 }

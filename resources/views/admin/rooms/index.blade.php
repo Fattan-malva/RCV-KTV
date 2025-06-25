@@ -624,6 +624,14 @@
                                     <input type="text" id="guestName" name="guest_name" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-md-6">
+                                    <label for="reservationWith" class="form-label">Reservation With</label>
+                                    <input type="text" id="reservationWith" name="reservation_with" class="form-control" required>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="taxPackage" class="form-label">Tax Package</label>
+                                    <input type="number" id="taxPackage" name="tax_package" class="form-control" required>
+                                </div>
+                                <div class="mb-3 col-md-6">
                                     <label for="notes" class="form-label">Notes</label>
                                     <textarea id="notes" name="notes" class="form-control"></textarea>
                                 </div>
@@ -639,7 +647,7 @@
                                     <input type="hidden" id="roomCategoryHidden" name="room_category_id">
                                 </div>
                                 <div class="mb-3 col-md-6">
-                                    <label for="roomCapacity" class="form-label">Capacity</label>
+                                    <label for="roomCapacity" class="form-label">Capacity Room</label>
                                     <input type="number" id="roomCapacity" name="capacity" class="form-control" required readonly>
                                 </div>
                                 <div class="mb-3 col-md-6">
@@ -867,6 +875,8 @@
                     $('#updateRoomModalLabel').text(`Room : ${data.room.name}`);
                     $('#updateRoomModal #roomName').val(data.room.name);
                     $('#updateRoomModal #guestName').val(data.trx ? data.trx.GuestName : '');
+                    $('#updateRoomModal #reservationWith').val(data.trx ? data.trx.ReservationWith : '');
+                    $('#updateRoomModal #taxPackage').val(data.trx ? data.trx.TaxPackage : '');
                     $('#updateRoomModal #notes').val(data.trx ? data.trx.Notes : '');
                     $('#updateRoomModal #tablet_number').val(data.trx ? data.room.tablet_number : '');
                     $('#updateRoomModal #roomCategory').html('');

@@ -31,6 +31,7 @@
                             <th>Booking At</th>
                             <th>Room</th>
                             <th>Guest</th>
+                            <th>RCP</th>
                             <th>Notes</th>
                             <th>BookPack</th>
                             <th>Action</th>
@@ -56,6 +57,7 @@
                                         <strong>{{ $booking->GuestName }}</strong>
                                     </div>
                                 </td>
+                                <td>{{ $booking->ReservationWith ?? '-' }}</td>
                                 <td>{{ $booking->Notes ?? '-' }}</td>
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
                                 <td>
@@ -91,6 +93,11 @@
                     <input type="text" name="GuestName" class="@error('GuestName') is-invalid @enderror" required>
                     <label>Guest Name</label>
                     @error('GuestName')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="mui-input-container">
+                    <input type="text" name="ReservationWith" class="@error('ReservationWith') is-invalid @enderror" required>
+                    <label>Reservation With</label>
+                    @error('ReservationWith')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
                     <select name="RoomId" class="@error('RoomId') is-invalid @enderror" required>
@@ -144,6 +151,10 @@
                             <label>Guest Name</label>
                         </div>
                         <div class="mui-input-container">
+                            <input type="text" id="editReservationWith" name="ReservationWith" required readonly>
+                            <label>Reservation With</label>
+                        </div>
+                        <div class="mui-input-container">
                             <select id="editRoomId" name="RoomId" required>
                                 <option value="">Select Room</option>
                                 @foreach($rooms as $room)
@@ -190,6 +201,7 @@
                                 <th>TrxTime</th>
                                 <th>Room Name</th>
                                 <th>Guest Name</th>
+                                <th>RCP</th>
                                 <th>Booking At</th>
                                 <th class="text-wrap">Reason</th>
                             </tr>
@@ -252,6 +264,7 @@
                 $.get(`/admin/trx-room-booking/${trxId}/edit`, function (data) {
                     $('#editTrxId').val(data.TrxId);
                     $('#editGuestName').val(data.GuestName);
+                    $('#editReservationWith').val(data.ReservationWith);
                     $('#editRoomId').val(data.RoomId);
                     $('#editTimeIn').val(data.TimeIn ? data.TimeIn.replace(' ', 'T') : '');
                     $('#editBookPack').val(data.BookPack);
@@ -297,7 +310,7 @@
             $.get('/admin/rooms/booking/logs', function (data) {
                 var rows = '';
                 if (data.length === 0) {
-                    rows = '<tr><td colspan="7" class="text-center">No log found</td></tr>';
+                    rows = '<div style="text-align:center;"></div>';
                 } else {
                     $.each(data, function (i, log) {
                         rows += '<tr>' +
@@ -306,6 +319,7 @@
                             '<td>' + log.TrxTime + '</td>' +
                             '<td>' + log.RoomId + '</td>' +
                             '<td>' + log.GuestName + '</td>' +
+                            '<td>' + log.ReservationWith + '</td>' +
                             '<td>' + log.TimeIn + '</td>' +
                             '<td class="text-wrap">' + log.Reason + '</td>' +
                             '</tr>';

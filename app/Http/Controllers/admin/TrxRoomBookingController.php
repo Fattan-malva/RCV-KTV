@@ -38,6 +38,7 @@ class TrxRoomBookingController extends Controller
             'RoomId' => 'required',
             'GuestId' => 'nullable',
             'GuestName' => 'required',
+            'ReservationWith' => 'required',
             'TimeIn' => 'required',
             'Notes' => 'nullable',
             'BookPack' => 'nullable',
@@ -58,6 +59,7 @@ class TrxRoomBookingController extends Controller
         $validated = $request->validate([
             'RoomId' => 'required',
             'GuestName' => 'required',
+            'ReservationWith' => 'required',
             'TimeIn' => 'required',
             'Notes' => 'nullable',
             'BookPack' => 'nullable',
@@ -83,6 +85,7 @@ class TrxRoomBookingController extends Controller
                 'RoomId' => $booking->RoomId,
                 'GuestId' => $booking->GuestId,
                 'GuestName' => $booking->GuestName,
+                'ReservationWith' => $booking->ReservationWith,
                 'TimeIn' => $booking->TimeIn,
                 'Reason' => $reason,
             ]);

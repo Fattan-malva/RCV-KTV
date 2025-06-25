@@ -140,6 +140,8 @@ class RoomController extends Controller
                     'TypeCheckIn' => $status,
                     'RoomId' => $roomId,
                     'GuestName' => $request->guest_name,
+                    'ReservationWith' => $request->reservation_with,
+                    'TaxPackage' => $request->tax_package,
                     'Notes' => $request->notes,
                 ]);
             }

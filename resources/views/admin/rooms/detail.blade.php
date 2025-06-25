@@ -9,9 +9,9 @@
                     <h1>Transaction List</h1>
                     <p>Manage room transaction details, check-in/out, and guest information.</p>
                     <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
-                                    <i class="fa-solid fa-plus"></i> Add New Transaction
-                                </button> -->
+                                        data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
+                                        <i class="fa-solid fa-plus"></i> Add New Transaction
+                                    </button> -->
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/karaokeroom.png') }}" alt="Image" class="img-fluid"
@@ -30,6 +30,7 @@
                             <th>Check Out</th>
                             <th>Room</th>
                             <th>Guest</th>
+                            <th>RCP With</th>
                             <th>Notes</th>
                             <th>Status</th>
                         </tr>
@@ -53,6 +54,7 @@
                                         <strong>{{ $trx->GuestName }}</strong>
                                     </div>
                                 </td>
+                                <td>{{ $trx->ReservationWith }}</td>
                                 <td>{{ $trx->Notes ?? '-' }}</td>
                                 <td>
                                     @if(in_array($trx->TypeCheckIn, [2, 3]))

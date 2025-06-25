@@ -43,6 +43,8 @@ class TrxRoomDetailController extends Controller
             'RoomId' => 'required',
             'GuestId' => 'nullable',
             'GuestName' => 'required',
+            'ReservationWith' => 'required',
+            'TaxPackage' => 'required',
             'Notes' => 'nullable',
         ]);
         TrxRoomDetail::create($validated);
