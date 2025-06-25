@@ -322,7 +322,7 @@
                 flex-direction: column;
                 min-height: 50vh;
                 font-family: 'Jost', sans-serif;
-                background: linear-gradient(to bottom, rgb(41, 12, 12), rgb(99, 43, 43), rgb(62, 36, 36));
+                background: linear-gradient(to bottom, rgb(41, 12, 12), #632b2b, rgb(62, 36, 36));
                 overflow: hidden;
             }
 

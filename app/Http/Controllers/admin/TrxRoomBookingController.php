@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TrxRoomBooking;
 use App\Models\TrxRoomBookingLog;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TrxRoomBookingController extends Controller
 {
@@ -94,4 +95,43 @@ class TrxRoomBookingController extends Controller
         }
         return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
     }
+
+    public function print(Request $request)
+    {
+        $mode = $request->mode;
+        $query = \App\Models\TrxRoomBooking::query();
+        $info = '';
+
+        if ($mode === 'range') {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+            ]);
+            $query->whereBetween('TrxDate', [$request->start_date, $request->end_date]);
+
+            $start = \Carbon\Carbon::parse($request->start_date)->format('d M Y');
+            $end = \Carbon\Carbon::parse($request->end_date)->format('d M Y');
+            $info = "Data dari tanggal <strong>{$start}</strong> sampai <strong>{$end}</strong>";
+        } elseif ($mode === 'monthly') {
+            $request->validate([
+                'month' => 'required|numeric|min:1|max:12',
+                'year' => 'required|numeric',
+            ]);
+            $query->whereYear('TrxDate', $request->year)
+                ->whereMonth('TrxDate', $request->month);
+
+            $monthName = \Carbon\Carbon::create()->month($request->month)->format('F');
+            $info = "Data bulan <strong>{$monthName}</strong> tahun <strong>{$request->year}</strong>";
+        }
+
+        $bookinglist = $query->orderBy('TrxDate')->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.rooms.print-booking', [
+            'bookinglist' => $bookinglist,
+            'info' => $info,
+        ])->setPaper('A4', 'portrait'); // <-- gunakan portrait di sini
+
+        return $pdf->stream('booking-report.pdf');
+    }
+
 }

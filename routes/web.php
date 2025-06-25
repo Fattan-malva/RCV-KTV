@@ -56,12 +56,17 @@ Route::middleware(['auth.check:admin|superadmin|kasir'])->group(function () {
 
     Route::get('admin-rooms-detail', [TrxRoomDetailController::class, 'index'])->name('admin.rooms.detail');
     Route::get('admin-rooms-detail-store', [TrxRoomDetailController::class, 'store'])->name('admin.trx-room-detail.store');
-
+    Route::get('/admin/detail/print', [TrxRoomDetailController::class, 'print'])->name('admin.detail.print-detail');
+    
+    
     Route::get('admin-rooms-booking', [TrxRoomBookingController::class, 'index'])->name('admin.rooms.booking');
     Route::delete('admin/rooms/booking/{TrxId}', [TrxRoomBookingController::class, 'destroy'])->name('admin.rooms.booking.destroy');
     Route::get('admin/trx-room-booking/{TrxId}/edit', [TrxRoomBookingController::class, 'edit'])->name('admin.trx-room-booking.edit');
     Route::put('admin/trx-room-booking/{TrxId}', [TrxRoomBookingController::class, 'update'])->name('admin.trx-room-booking.update');
     Route::post('admin-rooms-booking-store', [TrxRoomBookingController::class, 'store'])->name('admin.trx-room-booking.store');
+    Route::get('/admin/booking/print', [TrxRoomBookingController::class, 'print'])->name('admin.booking.print-booking');
+    Route::get('/admin/booking/print-cancelled', [TrxRoomBookinglogController::class, 'print'])->name('admin.booking.print-cancelled-booking');
+
     Route::get('admin/rooms/booking/logs', [TrxRoomBookingLogController::class, 'allLogs'])->name('admin.rooms.booking.logs');
 });
 Route::middleware(['auth.check:user'])->group(function () {

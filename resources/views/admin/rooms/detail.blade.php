@@ -9,9 +9,9 @@
                     <h1>Transaction List</h1>
                     <p>Manage room transaction details, check-in/out, and guest information.</p>
                     <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                        data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
-                                        <i class="fa-solid fa-plus"></i> Add New Transaction
-                                    </button> -->
+                                                data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
+                                                <i class="fa-solid fa-plus"></i> Add New Transaction
+                                            </button> -->
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/karaokeroom.png') }}" alt="Image" class="img-fluid"
@@ -20,6 +20,67 @@
             </div>
         </div>
         <div class="card p-4 mt-4">
+            <!-- Tombol Print PDF -->
+            <div class="button-print">
+                <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#printModal"
+                    style="background-color: #ae2f2f; color: white;">
+                    <i class="fa fa-print"></i> Print PDF
+                </button>
+            </div>
+
+
+            <!-- Modal Pilihan Metode Cetak -->
+            <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('admin.detail.print-detail') }}" method="GET" target="_blank" id="printForm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="printModalLabel">Print Transaction Report</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Opsi Cetak Berdasarkan Rentang -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="mode" value="range" id="modeRange"
+                                        checked>
+                                    <label class="form-check-label" for="modeRange">
+                                        Berdasarkan Rentang Tanggal
+                                    </label>
+                                </div>
+                                <div id="rangeInputs" class="mb-3">
+                                    <label>Tanggal Mulai</label>
+                                    <input type="date" name="start_date" class="form-control mb-2">
+                                    <label>Tanggal Akhir</label>
+                                    <input type="date" name="end_date" class="form-control">
+                                </div>
+
+                                <!-- Opsi Cetak Berdasarkan Bulan -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="mode" value="monthly"
+                                        id="modeMonthly">
+                                    <label class="form-check-label" for="modeMonthly">
+                                        Berdasarkan Bulan & Tahun
+                                    </label>
+                                </div>
+                                <div id="monthlyInputs" class="mb-3" style="display: none;">
+                                    <label>Bulan</label>
+                                    <select name="month" class="form-control mb-2">
+                                        @for ($m = 1; $m <= 12; $m++)
+                                            <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <label>Tahun</label>
+                                    <input type="number" name="year" class="form-control" placeholder="Contoh: 2025">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Tampilkan PDF</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div>
                 <table id="trxRoomTable" class="table table-responsive">
                     <thead>
@@ -134,6 +195,56 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modeRadios = document.querySelectorAll('input[name="mode"]');
+            const rangeInputs = document.getElementById('rangeInputs');
+            const monthlyInputs = document.getElementById('monthlyInputs');
+            const printForm = document.getElementById('printForm');
+
+            function toggleInputVisibility() {
+                const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+                if (selectedMode === 'range') {
+                    rangeInputs.style.display = 'block';
+                    monthlyInputs.style.display = 'none';
+                } else {
+                    rangeInputs.style.display = 'none';
+                    monthlyInputs.style.display = 'block';
+                }
+            }
+
+            modeRadios.forEach(radio => {
+                radio.addEventListener('change', toggleInputVisibility);
+            });
+
+            // Validasi manual saat form disubmit
+            printForm.addEventListener('submit', function (e) {
+                const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+
+                if (selectedMode === 'range') {
+                    const start = printForm.querySelector('[name="start_date"]').value;
+                    const end = printForm.querySelector('[name="end_date"]').value;
+
+                    if (!start || !end) {
+                        e.preventDefault();
+                        alert("Mohon isi Tanggal Mulai dan Tanggal Akhir.");
+                        return;
+                    }
+                } else if (selectedMode === 'monthly') {
+                    const month = printForm.querySelector('[name="month"]').value;
+                    const year = printForm.querySelector('[name="year"]').value;
+
+                    if (!month || !year) {
+                        e.preventDefault();
+                        alert("Mohon isi Bulan dan Tahun.");
+                        return;
+                    }
+                }
+            });
+
+            toggleInputVisibility(); // Jalankan saat pertama kali
+        });
+    </script>
     <script>
         function confirmDeleteTrx(id) {
             Swal.fire({

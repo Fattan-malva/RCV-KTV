@@ -22,6 +22,69 @@
             </div>
         </div>
         <div class="card p-4 mt-4">
+            <!-- Tombol Print PDF -->
+            <div class="button-print">
+                <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#printModal"
+                    style="background-color: #ae2f2f; color: white;">
+                    <i class="fa fa-print"></i> Print PDF
+                </button>
+            </div>
+
+
+            <!-- Modal Pilihan Metode Cetak -->
+            <div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="printModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('admin.booking.print-booking') }}" method="GET" target="_blank" id="printForm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="printModalLabel">Print Booking Report</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Opsi Cetak Berdasarkan Rentang -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="mode" value="range" id="modeRange"
+                                        checked>
+                                    <label class="form-check-label" for="modeRange">
+                                        Berdasarkan Rentang Tanggal
+                                    </label>
+                                </div>
+                                <div id="rangeInputs" class="mb-3">
+                                    <label>Tanggal Mulai</label>
+                                    <input type="date" name="start_date" class="form-control mb-2">
+                                    <label>Tanggal Akhir</label>
+                                    <input type="date" name="end_date" class="form-control">
+                                </div>
+
+                                <!-- Opsi Cetak Berdasarkan Bulan -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="mode" value="monthly"
+                                        id="modeMonthly">
+                                    <label class="form-check-label" for="modeMonthly">
+                                        Berdasarkan Bulan & Tahun
+                                    </label>
+                                </div>
+                                <div id="monthlyInputs" class="mb-3" style="display: none;">
+                                    <label>Bulan</label>
+                                    <select name="month" class="form-control mb-2">
+                                        @for ($m = 1; $m <= 12; $m++)
+                                            <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <label>Tahun</label>
+                                    <input type="number" name="year" class="form-control" placeholder="Contoh: 2025">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Tampilkan PDF</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
             <div>
                 <table id="trxRoomTable" class="table table-responsive">
                     <thead>
@@ -80,7 +143,7 @@
             </div>
         </div>
     </div>
-
+    <!-- offcanvas add booking -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateTrxRoomDetail"
         aria-labelledby="offcanvasCreateTrxRoomDetailLabel">
         <div class="offcanvas-header">
@@ -95,7 +158,8 @@
                     @error('GuestName')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mui-input-container">
-                    <input type="text" name="ReservationWith" class="@error('ReservationWith') is-invalid @enderror" required>
+                    <input type="text" name="ReservationWith" class="@error('ReservationWith') is-invalid @enderror"
+                        required>
                     <label>Reservation With</label>
                     @error('ReservationWith')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
@@ -189,10 +253,15 @@
         <div class="modal-dialog modal-large">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="logModalLabel">All Booking Cancel Logs</h5>
+                    <h5 class="modal-title" id="logModalLabel">Canceled Booking List</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Tombol trigger modal cetak PDF khusus Cancelled Booking -->
+                    <button class="btn mb-3 open-print-modal" style="background-color: #ae2f2f; color: white;">
+                        <i class="fa fa-print"></i> Print PDF
+                    </button>
+
                     <table class="table table-responsive" id="logTable">
                         <thead>
                             <tr>
@@ -214,6 +283,59 @@
             </div>
         </div>
     </div>
+    <!-- Modal Opsi Cetak PDF Canceled Booking -->
+    <div class="modal fade" id="printModalCB" tabindex="-1" aria-labelledby="printModalCBLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('admin.booking.print-cancelled-booking') }}" method="GET" target="_blank"
+                id="printFormCB">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="printModalCBLabel">Print Canceled Booking Report</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Pilihan Rentang -->
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="mode_cb" value="range" id="modeRangeCB"
+                                checked>
+                            <label class="form-check-label" for="modeRangeCB">
+                                Berdasarkan Rentang Tanggal
+                            </label>
+                        </div>
+                        <div id="rangeInputsCB" class="mb-3">
+                            <label>Tanggal Mulai</label>
+                            <input type="date" name="start_date" class="form-control mb-2">
+                            <label>Tanggal Akhir</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+
+                        <!-- Pilihan Bulanan -->
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="mode_cb" value="monthly" id="modeMonthlyCB">
+                            <label class="form-check-label" for="modeMonthlyCB">
+                                Berdasarkan Bulan & Tahun
+                            </label>
+                        </div>
+                        <div id="monthlyInputsCB" class="mb-3" style="display: none;">
+                            <label>Bulan</label>
+                            <select name="month" class="form-control mb-2">
+                                @for ($m = 1; $m <= 12; $m++)
+                                    <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
+                                @endfor
+                            </select>
+                            <label>Tahun</label>
+                            <input type="number" name="year" class="form-control" placeholder="Contoh: 2025">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tampilkan PDF</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Tambahkan di bagian script
@@ -371,6 +493,124 @@
             $('#trxRoomTable_filter input').attr('placeholder', 'Search...').css('padding-left', '25px');
         });
     </script>
+    <!-- print booking list -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modeRadios = document.querySelectorAll('input[name="mode"]');
+            const rangeInputs = document.getElementById('rangeInputs');
+            const monthlyInputs = document.getElementById('monthlyInputs');
+            const printForm = document.getElementById('printForm');
+
+            function toggleInputVisibility() {
+                const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+                if (selectedMode === 'range') {
+                    rangeInputs.style.display = 'block';
+                    monthlyInputs.style.display = 'none';
+                } else {
+                    rangeInputs.style.display = 'none';
+                    monthlyInputs.style.display = 'block';
+                }
+            }
+
+            modeRadios.forEach(radio => {
+                radio.addEventListener('change', toggleInputVisibility);
+            });
+
+            // Validasi manual saat form disubmit
+            printForm.addEventListener('submit', function (e) {
+                const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+
+                if (selectedMode === 'range') {
+                    const start = printForm.querySelector('[name="start_date"]').value;
+                    const end = printForm.querySelector('[name="end_date"]').value;
+
+                    if (!start || !end) {
+                        e.preventDefault();
+                        alert("Mohon isi Tanggal Mulai dan Tanggal Akhir.");
+                        return;
+                    }
+                } else if (selectedMode === 'monthly') {
+                    const month = printForm.querySelector('[name="month"]').value;
+                    const year = printForm.querySelector('[name="year"]').value;
+
+                    if (!month || !year) {
+                        e.preventDefault();
+                        alert("Mohon isi Bulan dan Tahun.");
+                        return;
+                    }
+                }
+            });
+
+            toggleInputVisibility(); // Jalankan saat pertama kali
+        });
+    </script>
+    <!-- print canceled booking list-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle tombol print CB
+            document.querySelectorAll('.open-print-modal').forEach(button => {
+                button.addEventListener('click', function () {
+                    const logModal = bootstrap.Modal.getInstance(document.getElementById('logModal'));
+                    logModal.hide();
+
+                    setTimeout(() => {
+                        const printModalCB = new bootstrap.Modal(document.getElementById('printModalCB'));
+                        printModalCB.show();
+                    }, 500);
+                });
+            });
+
+            // Toggle input CB berdasarkan pilihan
+            const modeRadiosCB = document.querySelectorAll('input[name="mode_cb"]');
+            const rangeInputsCB = document.querySelector('#rangeInputsCB');
+            const monthlyInputsCB = document.querySelector('#monthlyInputsCB');
+            const printFormCB = document.getElementById('printFormCB');
+
+            function toggleInputCB() {
+                const selected = document.querySelector('input[name="mode_cb"]:checked').value;
+                if (selected === 'range') {
+                    rangeInputsCB.style.display = 'block';
+                    monthlyInputsCB.style.display = 'none';
+                } else {
+                    rangeInputsCB.style.display = 'none';
+                    monthlyInputsCB.style.display = 'block';
+                }
+            }
+
+            modeRadiosCB.forEach(radio => {
+                radio.addEventListener('change', toggleInputCB);
+            });
+
+            printFormCB.addEventListener('submit', function (e) {
+                const selected = document.querySelector('input[name="mode_cb"]:checked').value;
+
+                if (selected === 'range') {
+                    const start = printFormCB.querySelector('[name="start_date"]').value;
+                    const end = printFormCB.querySelector('[name="end_date"]').value;
+
+                    if (!start || !end) {
+                        e.preventDefault();
+                        alert("Mohon isi Tanggal Mulai dan Tanggal Akhir.");
+                        return;
+                    }
+                } else {
+                    const month = printFormCB.querySelector('[name="month"]').value;
+                    const year = printFormCB.querySelector('[name="year"]').value;
+
+                    if (!month || !year) {
+                        e.preventDefault();
+                        alert("Mohon isi Bulan dan Tahun.");
+                        return;
+                    }
+                }
+            });
+
+            toggleInputCB();
+        });
+
+    </script>
+
+
 
     <style>
         .text-wrap {
