@@ -18,6 +18,12 @@
             font-size: 13px;
         }
 
+        h3.section-title {
+            margin-top: 30px;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -43,56 +49,69 @@
     <div class="header-info">
         <p>{!! $info !!}</p>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Date</th>
-                <th>Check In</th>
-                <th>Check Out</th>
-                <th>Room</th>
-                <th>Guest</th>
-                <th>RCP With</th>
-                <th>Notes</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($detaillist as $index => $detail)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($detail->TrxDate)->format('d M Y') }}</td>
-                    <td>
-                        {{ \Carbon\Carbon::parse($detail->CheckInTime)->format('d M Y H:i') }}
-                    </td>
-                    <td>
-                        @if($detail->CheckOutTime)
-                            {{ \Carbon\Carbon::parse($detail->CheckOutTime)->format('d M Y H:i') }}
-                        @endif
-                    </td>
-                    <td>{{ $detail->RoomId }}</td>
-                    <td>
-                        <div>
-                            <strong>{{ $detail->GuestName }}</strong>
-                        </div>
-                    </td>
-                    <td>{{ $detail->ReservationWith }}</td>
-                    <td>{{ $detail->Notes ?? '-' }}</td>
-                    <td>
-                        @if(in_array($detail->TypeCheckIn, [2, 3]))
-                            Guest
-                        @elseif(in_array($detail->TypeCheckIn, [4, 5]))
-                            Maintenance
-                        @elseif(in_array($detail->TypeCheckIn, [6, 7]))
-                            OO
-                        @else
-                            -
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+    @php
+        $grouped = [
+            'Guest' => [],
+            'Maintenance' => [],
+            'OO' => [],
+            'Other' => []
+        ];
+
+        foreach ($detaillist as $detail) {
+            if (in_array($detail->TypeCheckIn, [2, 3])) {
+                $grouped['Guest'][] = $detail;
+            } elseif (in_array($detail->TypeCheckIn, [4, 5])) {
+                $grouped['Maintenance'][] = $detail;
+            } elseif (in_array($detail->TypeCheckIn, [6, 7])) {
+                $grouped['OO'][] = $detail;
+            } else {
+                $grouped['Other'][] = $detail;
+            }
+        }
+    @endphp
+
+    @foreach ($grouped as $status => $records)
+        @if(count($records) > 0)
+            <h3 class="section-title">{{ $status }}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Room</th>
+                        <th>Guest</th>
+                        <th>RCP With</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($records as $index => $detail)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ \Carbon\Carbon::parse($detail->TrxDate)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($detail->CheckInTime)->format('d M Y H:i') }}</td>
+                            <td>
+                                @if($detail->CheckOutTime)
+                                    {{ \Carbon\Carbon::parse($detail->CheckOutTime)->format('d M Y H:i') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>{{ $detail->RoomId }}</td>
+                            <td><strong>{{ $detail->GuestName }}</strong></td>
+                            <td>{{ $detail->ReservationWith ?? '-' }}</td>
+                            <td>{{ $detail->Notes ?? '-' }}</td>
+                            <td>{{ $status }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    @endforeach
 </body>
 
 </html>
