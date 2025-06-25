@@ -44,13 +44,13 @@
                                     <input class="form-check-input" type="radio" name="mode" value="range" id="modeRange"
                                         checked>
                                     <label class="form-check-label" for="modeRange">
-                                        Berdasarkan Rentang Tanggal
+                                        Filter by Date Range
                                     </label>
                                 </div>
                                 <div id="rangeInputs" class="mb-3">
-                                    <label>Tanggal Mulai</label>
+                                    <label>Start Date</label>
                                     <input type="date" name="start_date" class="form-control mb-2">
-                                    <label>Tanggal Akhir</label>
+                                    <label>End Date</label>
                                     <input type="date" name="end_date" class="form-control">
                                 </div>
 
@@ -59,23 +59,23 @@
                                     <input class="form-check-input" type="radio" name="mode" value="monthly"
                                         id="modeMonthly">
                                     <label class="form-check-label" for="modeMonthly">
-                                        Berdasarkan Bulan & Tahun
+                                        Filter by Month and Year
                                     </label>
                                 </div>
                                 <div id="monthlyInputs" class="mb-3" style="display: none;">
-                                    <label>Bulan</label>
+                                    <label>Month</label>
                                     <select name="month" class="form-control mb-2">
                                         @for ($m = 1; $m <= 12; $m++)
                                             <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}
                                             </option>
                                         @endfor
                                     </select>
-                                    <label>Tahun</label>
-                                    <input type="number" name="year" class="form-control" placeholder="Contoh: 2025">
+                                    <label>Year</label>
+                                    <input type="number" name="year" class="form-control" placeholder="Example: 2025">
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Tampilkan PDF</button>
+                                <button type="submit" class="btn btn-primary">Preview</button>
                             </div>
                         </div>
                     </form>

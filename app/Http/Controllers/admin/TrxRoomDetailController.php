@@ -73,7 +73,8 @@ class TrxRoomDetailController extends Controller
 
             $start = \Carbon\Carbon::parse($request->start_date)->format('d M Y');
             $end = \Carbon\Carbon::parse($request->end_date)->format('d M Y');
-            $info = "Data dari tanggal <strong>{$start}</strong> sampai <strong>{$end}</strong>";
+            $info = "Report data from <strong>{$start}</strong> to <strong>{$end}</strong>";
+
         } elseif ($mode === 'monthly') {
             $request->validate([
                 'month' => 'required|numeric|min:1|max:12',
@@ -83,7 +84,7 @@ class TrxRoomDetailController extends Controller
                 ->whereMonth('TrxDate', $request->month);
 
             $monthName = \Carbon\Carbon::create()->month($request->month)->format('F');
-            $info = "Data bulan <strong>{$monthName}</strong> tahun <strong>{$request->year}</strong>";
+            $info = "Report data for the month of <strong>{$monthName}</strong>, <strong>{$request->year}</strong>";
         }
 
         $detaillist = $query->orderBy('TrxDate')->get();
@@ -91,7 +92,7 @@ class TrxRoomDetailController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.rooms.print-detail', [
             'detaillist' => $detaillist,
             'info' => $info,
-        ])->setPaper('A4', 'portrait'); 
+        ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('detail-report.pdf');
     }

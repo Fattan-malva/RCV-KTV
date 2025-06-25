@@ -111,7 +111,7 @@ class TrxRoomBookingController extends Controller
 
             $start = \Carbon\Carbon::parse($request->start_date)->format('d M Y');
             $end = \Carbon\Carbon::parse($request->end_date)->format('d M Y');
-            $info = "Data dari tanggal <strong>{$start}</strong> sampai <strong>{$end}</strong>";
+            $info = "Report data from <strong>{$start}</strong> to <strong>{$end}</strong>";
         } elseif ($mode === 'monthly') {
             $request->validate([
                 'month' => 'required|numeric|min:1|max:12',
@@ -121,7 +121,7 @@ class TrxRoomBookingController extends Controller
                 ->whereMonth('TrxDate', $request->month);
 
             $monthName = \Carbon\Carbon::create()->month($request->month)->format('F');
-            $info = "Data bulan <strong>{$monthName}</strong> tahun <strong>{$request->year}</strong>";
+            $info = "Report data for the month of <strong>{$monthName}</strong>, <strong>{$request->year}</strong>";
         }
 
         $bookinglist = $query->orderBy('TrxDate')->get();
