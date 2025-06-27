@@ -44,7 +44,7 @@
               </a>
 
                 <!-- All Room Card -->
-                <div class="card small" wire:click="setAvailability(null)" style="cursor:pointer;">
+                <div class="card small all-rooms" wire:click="setAvailability(null)" style="cursor:pointer;">
                     <div class="d-flex justify-content-between align-items-center" id="unavailable-icon" data-availability="0">
                         <div class="left-content">
                             <h5>All Rooms</h5>

@@ -85,8 +85,8 @@
             </div>
 
 
-            <div>
-                <table id="trxRoomTable" class="table table-responsive">
+            <div class="table-responsive p-0">
+                <table id="trxRoomTable" class="table table-responsive table w-100">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -125,7 +125,7 @@
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
                                 <td>
                                     @if(!$isExpired)
-                                        <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
+                                        <button class="btn btn-primary btn-sm edit-booking-btn" style="margin-bottom:10px;" data-trxid="{{ $booking->TrxId }}">
                                             <i class="fa fa-clock"></i> Reschedule
                                         </button>
                                         <button class="btn btn-danger btn-sm" onclick="cancelBooking('{{ $booking->TrxId }}')">
@@ -206,7 +206,7 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-header">
-                        <h5 class="modal-title" id="updateBookingModalLabel">Update Booking</h5>
+                        <h5 class="modal-title" id="updateBookingModalLabel">Reschedule Booking</h5>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="editTrxId" name="TrxId">

@@ -234,6 +234,29 @@
             display: none;
         }
     }
+
+    @media (max-width: 1024px) and (orientation: landscape) {
+        #sidebar {
+            max-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        #sidebar::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        #sidebar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar-logout-card-user {
+            bottom: -10px;
+        }
+    }
 </style>
 <!-- Sidebar -->
 <div id="sidebar" class="sidebar text-white">

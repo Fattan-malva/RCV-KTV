@@ -105,6 +105,7 @@
             color: #5c6bc0;
             margin-left: 25px;
             margin-top: -20px;
+            font-weight: bold;
         }
 
         .potrait-list {
@@ -157,6 +158,58 @@
             margin: 0;
             font-size: 0.9rem;
         }
+
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .small {
+                padding: 15px 20px;
+                margin-bottom: 15px;
+            }
+
+            .right-content p {
+                margin-left: 35%;
+                margin-top: 2%;
+            }
+
+            .content .left-content-room-available h5,
+            .content .left-content-room-used h5,
+            .content .left-content-guest-todays h5,
+            .content .left-content-booking-list h5,
+            .content .left-content-booking-canceled h5 {
+                display: none;
+            }
+
+            .content.collapsed .left-content-room-available h5,
+            .content.collapsed .left-content-room-used h5,
+            .content.collapsed .left-content-guest-todays h5,
+            .content.collapsed .left-content-booking-list h5,
+            .content.collapsed .left-content-booking-canceled h5 {
+                display: block;
+            }
+
+            .content .right-content p {
+                margin-top: -55%;
+                margin-left: 45%;
+            }
+
+            .content .right-content .label-thisweek {
+                display: none;
+            }
+
+            .content.collapsed .right-content .label-thisweek {
+                display: inline;
+            }
+
+
+            .content.collapsed .right-content p {
+                display: block;
+                margin-top: 0;
+                margin-left: 35%;
+            }
+
+            .content.collapsed .chart {
+                height: 68.5%;
+            }
+        }
     </style>
 
     <div class="row">
@@ -170,7 +223,7 @@
                     <img src="{{ asset('img/fotoadmin.png') }}" alt="Image" class="img-fluid" style="max-width: 150px;" />
                 </div>
             </div>
-            <div class="card p-4 mt-4">
+            <div class="card p-4 mt-4 chart">
                 <div class="d-flex flex-column" style="height: 340px;">
                     <canvas id="checkinChart"></canvas>
                 </div>
@@ -233,7 +286,7 @@
                     <h5>Booking Canceled</h5>
                 </div>
                 <div class="right-content" style="margin-left: 27%;">
-                    <p>{{ $bookingCanceled }} this week</p>
+                    <p>{{ $bookingCanceled }} <span class="label-thisweek">this week</span></p>
                 </div>
             </div>
         </div>
@@ -410,5 +463,6 @@
                 }
             }
         });
+
     </script>
 @endsection

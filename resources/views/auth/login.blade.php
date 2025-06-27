@@ -5,6 +5,7 @@
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="slide navbar style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -108,7 +109,7 @@
         }
 
         button:hover {
-            background: rgb(42, 79, 138);
+            background: #2a4f8a;
         }
 
         button[type="button-google"] {
@@ -236,7 +237,7 @@
             height: auto;
         }
 
-
+        /* mobile potrait */
         @media (max-width: 768px) {
             body {
                 margin: 0;
@@ -247,7 +248,6 @@
                 flex-direction: column;
                 min-height: 100vh;
                 font-family: 'Jost', sans-serif;
-                background: linear-gradient(to bottom, rgb(41, 12, 12), rgb(99, 43, 43), rgb(62, 36, 36));
                 overflow: hidden;
             }
 
@@ -312,6 +312,7 @@
             }
         }
 
+        /* mobile landscape */
         @media (max-width: 1024px) and (orientation: landscape) {
             body {
                 margin: 0;
@@ -322,7 +323,6 @@
                 flex-direction: column;
                 min-height: 50vh;
                 font-family: 'Jost', sans-serif;
-                background: linear-gradient(to bottom, rgb(41, 12, 12), #632b2b, rgb(62, 36, 36));
                 overflow: hidden;
             }
 
@@ -429,9 +429,7 @@
                 cursor: pointer;
             }
 
-            button:hover {
-                background: rgb(184, 68, 68);
-            }
+
 
             button[type="button-google"] {
                 width: 60%;

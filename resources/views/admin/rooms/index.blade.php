@@ -385,6 +385,12 @@
             75%  { background-color: #00ad00; opacity: 0.7; }
             100% { background-color: #00bfff; opacity: 1; }
         }
+        /* mobile landscape */
+          @media (max-width: 1024px) and (orientation: landscape) {
+            .all-rooms{
+                display: none;
+            }
+          }
 
     </style>
 

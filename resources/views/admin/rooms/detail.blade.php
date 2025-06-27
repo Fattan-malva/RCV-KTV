@@ -81,8 +81,8 @@
                     </form>
                 </div>
             </div>
-            <div>
-                <table id="trxRoomTable" class="table table-responsive">
+            <div class="table-responsive p-0">
+                <table id="trxRoomTable" class="table table-responsive w-100">
                     <thead>
                         <tr>
                             <th>#</th>
