@@ -321,27 +321,22 @@
             <div class="card portrait-card">
                 <h5>Booking List</h5>
                 <div class="potrait-list">
-                    @foreach($bookinglistData as $booking)
+                    @forelse($bookinglistData as $booking)
                         @php
-                            // Gabungkan tanggal dan jam untuk TimeIn
                             $timeIn = \Carbon\Carbon::parse($booking->TimeIn);
                         @endphp
-                        @if($timeIn->greaterThanOrEqualTo(now()))
-                            <div class="data-booking">
-                                <p>
-                                    <strong style="font-size: large;">{{ $booking->RoomId }} : </strong>
-                                    {{ $booking->GuestName }}
-                                    at {{ $timeIn->format('d M Y H:i') }}
-                                </p>
-                            </div>
-                        @endif
-                    @endforeach
-
-                    @if($bookinglistData->filter(fn($b) => \Carbon\Carbon::parse($b->TimeIn)->greaterThanOrEqualTo(now()))->isEmpty())
+                        <div class="data-booking">
+                            <p>
+                                <strong style="font-size: large;">{{ $booking->RoomId }} : </strong>
+                                {{ $booking->GuestName }}
+                                at {{ $timeIn->format('d M Y H:i') }}
+                            </p>
+                        </div>
+                    @empty
                         <div class="data-booking">
                             <p>No upcoming bookings.</p>
                         </div>
-                    @endif
+                    @endforelse
                 </div>
             </div>
         </div>

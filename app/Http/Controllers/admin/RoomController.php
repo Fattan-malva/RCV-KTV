@@ -41,8 +41,7 @@ class RoomController extends Controller
             ->count();
 
 
-        $upcomingBookings = \App\Models\TrxRoomBooking::where('TimeIn', '>=', now())
-            ->orderBy('TimeIn')
+        $upcomingBookings = \App\Models\TrxRoomBooking::orderBy('TimeIn')
             ->get()
             ->groupBy('RoomId');
 
@@ -95,9 +94,16 @@ class RoomController extends Controller
 
         // Hanya ambil booking yang TimeIn >= sekarang
         $bookings = \App\Models\TrxRoomBooking::where('RoomId', $room->roomId)
-            ->where('TimeIn', '>=', now())
+            ->where(function ($q) {
+                $now = now();
+                $q->whereNull('IsCheckedIn')
+                    ->orWhere(function ($sub) use ($now) {
+                        $sub->where('IsCheckedIn', 0)
+                            ->whereRaw('DATEADD(hour, 3, TimeIn) > ?', [$now]);
+                    });
+            })
             ->orderBy('TimeIn', 'asc')
-            ->get(['GuestName', 'TimeIn']);
+            ->get(['TrxId', 'GuestName', 'TimeIn', 'Notes', 'ReservationWith', 'BookPack']);
 
         return response()->json([
             'room' => $room,
@@ -145,6 +151,12 @@ class RoomController extends Controller
                     'Notes' => $request->notes,
                 ]);
             }
+            if ($request->has('selectedTrxId')) {
+                $trxId = $request->input('selectedTrxId');
+                if ($trxId) {
+                    \App\Models\TrxRoomBooking::where('TrxId', $trxId)->update(['IsCheckedIn' => 1]);
+                }
+            }
         }
         // Check-out (Guest/Host/Maintenance/OO)
         if (in_array($status, [3, 5, 7])) {
@@ -158,10 +170,10 @@ class RoomController extends Controller
                     'Notes' => $request->notes,
                 ]);
         }
-
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Room updated successfully.']);
         }
+
         return redirect()->back()->with('success', 'Room updated successfully.');
     }
 

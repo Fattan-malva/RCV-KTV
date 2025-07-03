@@ -9,9 +9,9 @@
                     <h1>Transaction List</h1>
                     <p>Manage room transaction details, check-in/out, and guest information.</p>
                     <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                                                data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
-                                                <i class="fa-solid fa-plus"></i> Add New Transaction
-                                            </button> -->
+                                                    data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
+                                                    <i class="fa-solid fa-plus"></i> Add New Transaction
+                                                </button> -->
                 </div>
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('img/karaokeroom.png') }}" alt="Image" class="img-fluid"
@@ -81,8 +81,8 @@
                     </form>
                 </div>
             </div>
-            <div class="table-responsive p-0">
-                <table id="trxRoomTable" class="table table-responsive w-100">
+            <div>
+                <table id="trxRoomTable" class="table table-responsive ">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -301,6 +301,13 @@
         });
     </script>
     <style>
+        @media (max-width: 1024px) and (orientation: landscape) {
+            #trxRoomTable {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
         /* Copy style dari user management agar konsisten */
         .card {
             padding: 20px;

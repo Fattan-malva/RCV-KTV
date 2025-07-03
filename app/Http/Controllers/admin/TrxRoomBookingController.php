@@ -43,6 +43,7 @@ class TrxRoomBookingController extends Controller
             'TimeIn' => 'required',
             'Notes' => 'nullable',
             'BookPack' => 'nullable',
+            'IsCheckedIn' => 'nullable',
         ]);
 
         TrxRoomBooking::create($validated);
@@ -64,6 +65,7 @@ class TrxRoomBookingController extends Controller
             'TimeIn' => 'required',
             'Notes' => 'nullable',
             'BookPack' => 'nullable',
+            'IsCheckedIn' => 'nullable',
         ]);
         TrxRoomBooking::where('TrxId', $TrxId)->update($validated);
         return response()->json(['success' => true]);

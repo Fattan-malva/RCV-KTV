@@ -37,7 +37,7 @@ class RoomRealtime extends Component
         $roomToday = TrxRoomDetail::where('TrxDate', now()->format('Y-m-d'))
             ->whereIn('TypeCheckIn', [2, 3])
             ->count();
-        $upcomingBookings = TrxRoomBooking::where('TimeIn', '>=', now())
+        $upcomingBookings = TrxRoomBooking::where('IsCheckedIn', 0)
             ->orderBy('TimeIn')
             ->get()
             ->groupBy('RoomId');

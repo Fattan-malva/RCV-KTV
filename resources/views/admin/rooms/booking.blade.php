@@ -85,8 +85,8 @@
             </div>
 
 
-            <div class="table-responsive p-0">
-                <table id="trxRoomTable" class="table table-responsive table w-100">
+            <div>
+                <table id="trxRoomTable" class="table table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -103,15 +103,34 @@
                     <tbody>
                         @foreach ($bookinglist as $index => $booking)
                             @php
-                                $isExpired = $booking->TimeIn && \Carbon\Carbon::parse($booking->TimeIn)->lt(\Carbon\Carbon::now());
+                                $isCheckedIn = $booking->IsCheckedIn == 1;
+                                $timeIn = $booking->TimeIn ? \Carbon\Carbon::parse($booking->TimeIn) : null;
+
+                                // Expired Check-in: sudah check-in dan sudah lewat 1 jam dari TimeIn
+                                $isExpiredCheckin = $isCheckedIn && $timeIn && $timeIn->copy()->addHour()->lt(now());
+
+                                // Expired Uncheck-in: belum check-in dan sudah lewat 3 jam dari TimeIn
+                                $isExpiredUncheckin = ($booking->IsCheckedIn == 0) && $timeIn && $timeIn->copy()->addHours(3)->lt(now());
+
+                                $isExpired = $isExpiredCheckin || $isExpiredUncheckin;
                             @endphp
-                            <tr @if($isExpired) style="background-color: #f0f0f0; color: #aaa;" @endif>
+                            <tr
+                                @if($isExpiredCheckin || $isExpiredUncheckin)
+                                    style="background-color: #f0f0f0; color: #aaa;"
+                                @elseif($isCheckedIn)
+                                    style="background-color: #e0ffe0; color: #1a7f37;"
+                                @endif
+                            >
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ \Carbon\Carbon::parse($booking->TrxDate)->format('d M Y') }}</td>
                                 <td>
                                     {{ $booking->TimeIn ? \Carbon\Carbon::parse($booking->TimeIn)->format('d M Y H:i') : '-' }}
-                                    @if($isExpired)
-                                        <span class="badge bg-secondary ms-2">Expired</span>
+                                    @if($isExpiredCheckin)
+                                        <span class="badge bg-secondary ms-2">Expired (Check-in)</span>
+                                    @elseif($isExpiredUncheckin)
+                                        <span class="badge bg-dark ms-2">Expired (Uncheck-in)</span>
+                                    @elseif($isCheckedIn)
+                                        <span class="badge bg-success ms-2">Checked In</span>
                                     @endif
                                 </td>
                                 <td>{{ $booking->RoomId }}</td>
@@ -124,8 +143,8 @@
                                 <td>{{ $booking->Notes ?? '-' }}</td>
                                 <td>{{ $booking->BookPack ?? '-' }}</td>
                                 <td>
-                                    @if(!$isExpired)
-                                        <button class="btn btn-primary btn-sm edit-booking-btn" style="margin-bottom:10px;" data-trxid="{{ $booking->TrxId }}">
+                                    @if(!$isExpired && !$isCheckedIn)
+                                        <button class="btn btn-primary btn-sm edit-booking-btn" data-trxid="{{ $booking->TrxId }}">
                                             <i class="fa fa-clock"></i> Reschedule
                                         </button>
                                         <button class="btn btn-danger btn-sm" onclick="cancelBooking('{{ $booking->TrxId }}')">
@@ -152,6 +171,7 @@
         <div class="offcanvas-body">
             <form action="{{ route('admin.trx-room-booking.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="IsCheckedIn" value="0">
                 <div class="mui-input-container">
                     <input type="text" name="GuestName" class="@error('GuestName') is-invalid @enderror" required>
                     <label>Guest Name</label>
@@ -613,6 +633,25 @@
 
 
     <style>
+        @media (max-width: 1024px) and (orientation: landscape) {
+            #trxRoomTable {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .edit-booking-btn {
+                display: block;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+
+            .btn-danger {
+                display: block;
+                width: 100%;
+            }
+        }
+
         .text-wrap {
             white-space: normal !important;
             word-break: break-word;

@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Booking Report</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 12px; }
-        .header-info { margin-bottom: 10px; }
-        .header-info p { margin: 0; font-size: 13px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
-        th { background-color: #f0f0f0; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .header-info {
+            margin-bottom: 10px;
+        }
+
+        .header-info p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
+
 <body>
     <h2 style="text-align: center;">Booking Report</h2>
 
@@ -29,10 +55,17 @@
                 <th>RCP</th>
                 <th>Notes</th>
                 <th>BookPack</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($bookinglist as $index => $booking)
+                @php
+                    $isCheckedIn = $booking->IsCheckedIn == 1;
+                    $timeIn = $booking->TimeIn ? \Carbon\Carbon::parse($booking->TimeIn) : null;
+                    $isExpiredCheckin = $isCheckedIn && $timeIn && $timeIn->copy()->addHour()->lt(now());
+                    $isExpiredUncheckin = ($booking->IsCheckedIn == 0) && $timeIn && $timeIn->copy()->addHours(3)->lt(now());
+                @endphp
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->TrxDate)->format('d M Y') }}</td>
@@ -42,9 +75,21 @@
                     <td>{{ $booking->ReservationWith ?? '-' }}</td>
                     <td>{{ $booking->Notes ?? '-' }}</td>
                     <td>{{ $booking->BookPack ?? '-' }}</td>
+                    <td>
+                        @if($isExpiredCheckin)
+                            Expired (Check-in)
+                        @elseif($isExpiredUncheckin)
+                            Expired (Uncheck-in)
+                        @elseif($isCheckedIn)
+                            Checked In
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
 </html>

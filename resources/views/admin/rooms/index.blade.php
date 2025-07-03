@@ -319,15 +319,6 @@
             border-radius: 5px;
         }
 
-
-        .portrait-card {
-            display: none;
-            height: 400px;
-            box-shadow: rgb(230, 231, 235) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-            padding: 15px;
-            text-align: center;
-        }
-
         #updateRoomModalLabel {
             display: flex;
             justify-content: center;
@@ -385,12 +376,31 @@
             75%  { background-color: #00ad00; opacity: 0.7; }
             100% { background-color: #00bfff; opacity: 1; }
         }
+        /* ...existing code... */
+        .mini-blink-alert {
+            animation: colorful-blink 1.2s linear infinite;
+            background: #fffbe6;
+            color: black;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+        @keyframes colorful-blink {
+            0%   { background-color: #c10000; opacity: 1; }
+            25%  { background-color: #ff8000; opacity: 0.7; }
+            50%  { background-color: #ffff01; opacity: 0.3; }
+            75%  { background-color: #00ad00; opacity: 0.7; }
+            100% { background-color: #00bfff; opacity: 1; }
+        }
         /* mobile landscape */
-          @media (max-width: 1024px) and (orientation: landscape) {
+        @media (max-width: 1024px) and (orientation: landscape) {
             .all-rooms{
                 display: none;
             }
-          }
+        }
 
     </style>
 
@@ -605,13 +615,12 @@
         </div>
 
         <!-- Room Card -->
-   
-           @livewire('room-realtime')
+        @livewire('room-realtime')
 
         <!-- Modal Update -->
         <div class="modal fade" id="updateRoomModal" tabindex="-1" aria-labelledby="updateRoomModalLabel"
             aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <form id="updateRoomForm" method="POST">
                         @csrf
@@ -620,46 +629,52 @@
                             <h5 class="modal-title" id="updateRoomModalLabel">Room</h5>
                         </div>
                         <div class="modal-body">
-                           
                             <div class="row">
-                                 <div id="roomBookingList" class="mb-3"></div>
-
-                                 <input type="hidden" id="roomName" name="name" required>
-                                <div class="mb-3 col-md-6">
-                                    <label for="guestName" class="form-label">Guest Name</label>
-                                    <input type="text" id="guestName" name="guest_name" class="form-control" required>
+                                <!-- Kiri: Booking List -->
+                                <div class="col-md-3 border-end" style="min-height:100px;">
+                                    <div id="roomBookingList" class="mb-3" style="max-height: 50vh; overflow-y: auto;"></div>
                                 </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="reservationWith" class="form-label">Reservation With</label>
-                                    <input type="text" id="reservationWith" name="reservation_with" class="form-control" required>
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="taxPackage" class="form-label">Tax Package</label>
-                                    <input type="number" id="taxPackage" name="tax_package" class="form-control" required>
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="notes" class="form-label">Notes</label>
-                                    <textarea id="notes" name="notes" class="form-control"></textarea>
-                                </div>
-                                <!-- <div class="mb-3 col-md-6">
-                                    <label for="tablet_number" class="form-label">No. Tablet</label>
-                                    <textarea id="tablet_number" name="tablet_number" class="form-control"></textarea>
-                                </div> -->
-                                <div class="mb-3 col-md-6">
-                                    <label for="roomCategory" class="form-label">Category</label>
-                                    <select id="roomCategory" name="room_category_id" class="form-select" required disabled>
-                                        <!-- Options akan diisi melalui JavaScript -->
-                                    </select>
-                                    <input type="hidden" id="roomCategoryHidden" name="room_category_id">
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="roomCapacity" class="form-label">Capacity Room</label>
-                                    <input type="number" id="roomCapacity" name="capacity" class="form-control" required readonly>
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label class="form-label">Status</label>
-                                    <div id="roomStatusButtons" class="d-flex gap-2"></div>
-                                    <input type="hidden" id="roomAvailable" name="available" required>
+                                <!-- Kanan: Form (tetap dua kolom) -->
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="hidden" id="roomName" name="name" required>
+                                            <div class="mb-3">
+                                                <label for="guestName" class="form-label">Guest Name</label>
+                                                <input type="text" id="guestName" name="guest_name" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="reservationWith" class="form-label">Reservation With</label>
+                                                <input type="text" id="reservationWith" name="reservation_with" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="taxPackage" class="form-label">Tax Package</label>
+                                                <input type="number" id="taxPackage" name="tax_package" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="roomCategory" class="form-label">Category</label>
+                                                <select id="roomCategory" name="room_category_id" class="form-select" required disabled>
+                                                    <!-- Options akan diisi melalui JavaScript -->
+                                                </select>
+                                                <input type="hidden" id="roomCategoryHidden" name="room_category_id">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="roomCapacity" class="form-label">Capacity Room</label>
+                                                <input type="number" id="roomCapacity" name="capacity" class="form-control" required readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="notes" class="form-label">Notes</label>
+                                                <textarea id="notes" name="notes" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Status</label>
+                                            <div id="roomStatusButtons" class="d-flex gap-2"></div>
+                                            <input type="hidden" id="roomAvailable" name="available" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -672,44 +687,10 @@
             </div>
         </div>
 
-        <!-- Row for Portrait Cards -->
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card portrait-card">
-                    <h5>Portrait 1</h5>
-                    <p>Content for portrait 1.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card portrait-card">
-                    <h5>Portrait 2</h5>
-                    <p>Content for portrait 2.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card portrait-card">
-                    <h5>Portrait 3</h5>
-                    <p>Content for portrait 3.</p>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- JS Offcanvas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    <script>
-        let bookingHtml = '';
-        if (data.bookings && data.bookings.length > 0) {
-            bookingHtml += '<div class="alert alert-info p-2 mb-2"><strong>Upcoming Booking List:</strong><ul style="margin-bottom:0">';
-            data.bookings.forEach(function(booking) {
-                bookingHtml += `<li><b>${booking.GuestName}</b> at <span style="color:#696cff">${booking.TimeIn ? moment(booking.TimeIn).format('DD MMM YYYY HH:mm') : '-'}</span></li>`;
-            });
-            bookingHtml += '</ul></div>';
-        } else {
-            bookingHtml += '<div class="alert alert-secondary p-2 mb-2">No upcoming bookings for this room.</div>';
-        }
-        $('#roomBookingList').html(bookingHtml);
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Get the elements
@@ -865,17 +846,80 @@
 
                 $.get(url, function (data) {
                     // Render Booking List
-                    let bookingHtml = '';
+                   let bookingHtml = '';
+                    let hasCheckedIn = false;
                     if (data.bookings && data.bookings.length > 0) {
-                        bookingHtml += '<div class="alert alert-info p-2 mb-2"><strong>Upcoming Booking List:</strong><ul style="margin-bottom:0">';
+                        bookingHtml += '<div class="alert p-2 mb-2"><strong>Upcoming Booking List:</strong><ul style="margin-bottom:0">';
                         data.bookings.forEach(function(booking) {
-                            bookingHtml += `<li><b>${booking.GuestName}</b> at <span style="color:#696cff">${booking.TimeIn ? moment(booking.TimeIn).format('DD MMM YYYY HH:mm') : '-'}</span></li>`;
+                            // Cek jika ada yang sudah check-in
+                            if (booking.IsCheckedIn == 1) {
+                                hasCheckedIn = true;
+                            }
+                            bookingHtml += `<li class="booking-item${hasCheckedIn ? ' disabled' : ''}" 
+                                style="background-color: #dfe4fa; padding: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 5px;${hasCheckedIn ? 'opacity:0.5;pointer-events:none;' : ''}"
+                                data-guest="${booking.GuestName ?? ''}"
+                                data-reservation="${booking.ReservationWith ?? ''}"
+                                data-tax="${booking.BookPack ?? ''}"
+                                data-notes="${booking.Notes ?? ''}"
+                                data-trxid="${booking.TrxId ?? ''}"
+                            >
+                                <b style="font-size:18px;">${booking.GuestName}</b>
+                                <br>
+                                <span style="color:#696cff">${booking.TimeIn ? moment(booking.TimeIn).format('DD MMM YYYY HH:mm') : '-'}</span>
+                                <br>
+                            </li>`;
                         });
                         bookingHtml += '</ul></div>';
                     } else {
                         bookingHtml += '<div class="alert alert-secondary p-2 mb-2">No upcoming bookings for this room.</div>';
                     }
                     $('#roomBookingList').html(bookingHtml);
+
+                    // Hanya pasang event click jika belum ada yang check-in
+                    if (!hasCheckedIn) {
+                        $('#roomBookingList').off('click', '.booking-item').on('click', '.booking-item', function(e) {
+                            e.preventDefault();
+                            // Cek jika form sudah terisi
+                            const guestName = $('#guestName').val();
+                            const reservationWith = $('#reservationWith').val();
+                            const taxPackage = $('#taxPackage').val();
+                            const notes = $('#notes').val();
+                            if (guestName || reservationWith || taxPackage || notes) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'There are Guests for now!',
+                                    text: 'Please check out first for this room.',
+                                    toast: true,
+                                    position: 'top',
+                                    showConfirmButton: false,
+                                    timer: 2500
+                                });
+                                return;
+                            }
+                            const $item = $(this);
+                            Swal.fire({
+                                title: 'Use This Booking?',
+                                text: 'Are you sure you want to select this booking for check-in/check-out?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'Cancel',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $('#guestName').val($item.data('guest'));
+                                    $('#reservationWith').val($item.data('reservation'));
+                                    $('#taxPackage').val($item.data('tax'));
+                                    $('#notes').val($item.data('notes'));
+                                    if ($('#selectedTrxId').length === 0) {
+                                        $('#updateRoomForm').append('<input type="hidden" id="selectedTrxId" name="selectedTrxId" />');
+                                    }
+                                    $('#selectedTrxId').val($item.data('trxid'));
+                                }
+                                // Jika Cancel, tidak melakukan apa-apa
+                            });
+                        });
+                    }
 
                     // Isi modal form seperti biasa
                     $('#updateRoomModalLabel').text(`Room : ${data.room.name}`);

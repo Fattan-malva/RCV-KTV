@@ -14,6 +14,6 @@ class TrxRoomBooking extends Model
     public $incrementing = false;    // Jika TrxId bukan auto-increment
     protected $keyType = 'string';
     public $timestamps = false;
-    protected $fillable = ['TrxId', 'TrxDate', 'TrxTime', 'RoomId', 'GuestId', 'GuestName','ReservationWith', 'TimeIn', 'Notes', 'BookPack'];
+    protected $fillable = ['TrxId', 'TrxDate', 'TrxTime', 'RoomId', 'GuestId', 'GuestName','ReservationWith', 'TimeIn', 'Notes', 'BookPack', 'IsCheckedIn'];
 
 }

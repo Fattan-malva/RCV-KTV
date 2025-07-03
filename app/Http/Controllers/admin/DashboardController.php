@@ -24,7 +24,9 @@ class DashboardController extends Controller
         $availableRoomCount = Room::whereIn('available', [1, 3, 5, 7])->count();
         $unavailableRoomCount = Room::whereIn('available', [2, 4, 6])->count();
         $now = now();
-        $bookingList = TrxRoomBooking::where('TimeIn', '>=', Carbon::now())->count();
+        $bookingList = TrxRoomBooking::where('IsCheckedIn', 0)
+            ->whereRaw('DATEADD(hour, 3, TimeIn) > ?', [$now])
+            ->count();
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
         $bookingCanceled = TrxRoomBookingLog::whereBetween('TimeIn', [$startOfWeek, $endOfWeek])->count();
@@ -39,7 +41,8 @@ class DashboardController extends Controller
             ->pluck('total', 'month')
             ->toArray();
         $now = now();
-        $bookinglistData = TrxRoomBooking::where('TimeIn', '>=', $now)
+        $bookinglistData = TrxRoomBooking::where('IsCheckedIn', 0)
+            ->whereRaw('DATEADD(hour, 3, TimeIn) > ?', [$now])
             ->orderBy('TimeIn', 'asc')
             ->get();
 
