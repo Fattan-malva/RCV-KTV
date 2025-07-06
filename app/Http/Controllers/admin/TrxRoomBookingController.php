@@ -18,7 +18,7 @@ class TrxRoomBookingController extends Controller
 
         $bookinglist = \App\Models\TrxRoomBooking::where('TrxDate', '>=', $twoMonthsAgo)
             ->orderByRaw(
-                "CASE WHEN TimeIn >= ? THEN 0 ELSE 1 END, TimeIn ASC",
+                "CASE WHEN TimeIn >= ? THEN 0 ELSE 1 END, TimeIn DESC",
                 [$now]
             )->get();
 

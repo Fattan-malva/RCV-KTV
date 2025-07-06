@@ -400,6 +400,11 @@
             .all-rooms{
                 display: none;
             }
+
+            #roomStatusButtons .status-btn {
+                margin-bottom: 0px;
+                padding: 15px 30px;
+            }
         }
 
     </style>
