@@ -159,6 +159,34 @@
             font-size: 0.9rem;
         }
 
+        /* Mobile Potrait */
+        @media (max-width: 768px) {
+            .info-rcp {
+                padding-top: 4%;
+            }
+
+            .right-content {
+                margin-left: 0;
+            }
+
+            .small {
+                margin-right: 0;
+            }
+
+            .portrait-card {
+                margin-bottom: 4%;
+            }
+
+            .portrait-card[style*="margin-right:35px"] {
+                margin-right: 0 !important;
+            }
+
+            .end-content {
+                margin-bottom: 4%;
+            }
+        }
+
+        /* Mobile landscape */
         @media (max-width: 1024px) and (orientation: landscape) {
             .small {
                 padding: 15px 20px;
@@ -217,8 +245,8 @@
             <div class="card p-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h1>Welcome to Admin Dashboard</h1>
-                        <p>This is the main content area.</p>
+                        <h1>Welcome to Dashboard RCP-KTV</h1>
+                        <p>BFashion Karaoke Room</p>
                     </div>
                     <img src="{{ asset('img/fotoadmin.png') }}" alt="Image" class="img-fluid" style="max-width: 150px;" />
                 </div>
@@ -229,8 +257,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
+        <div class="col-md-4 info-rcp">
             <a href="{{ route('admin.rooms') }}" style="cursor:pointer; text-decoration: none; color: inherit;">
                 <div class="card small">
                     <div class="left-content-room-available">
@@ -340,7 +367,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 end-content">
             <div class="card portrait-card" style="margin-right:35px;">
                 <h5>Running Room's Now</h5>
                 <div class="potrait-list">

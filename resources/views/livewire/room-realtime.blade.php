@@ -28,7 +28,7 @@
         }
     }
 @endphp
-<div>
+<div class="end-content">
     <div class="row">
         <div class="col-12 mb-3">
             @if($anyBlinking)

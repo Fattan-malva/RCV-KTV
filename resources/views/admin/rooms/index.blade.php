@@ -356,12 +356,6 @@
             font-size: 18px;
         }
 
-        @media (max-width: 768px) {
-            .room-card {
-                width: 150px;
-            }
-        }
-
         .blinking-room {
             animation: colorful-blink 1.5s linear infinite;
             color: black; /* Optional: agar teks kontras */
@@ -395,6 +389,19 @@
             75%  { background-color: #00ad00; opacity: 0.7; }
             100% { background-color: #00bfff; opacity: 1; }
         }
+        /* mobile potrait */
+        @media (max-width: 768px) {
+            .all-rooms{
+                display: none;
+            }
+            .end-content {
+                margin-bottom: 7%;
+            }
+             #roomStatusButtons {
+                display: block !important;
+                gap: 0 !important;
+            }
+        }
         /* mobile landscape */
         @media (max-width: 1024px) and (orientation: landscape) {
             .all-rooms{
@@ -409,7 +416,7 @@
 
     </style>
 
-    <div class="container-content" style="margin-right: 25px;">
+    <div class="container-content">
         <!-- Row for Small Cards -->
      
 

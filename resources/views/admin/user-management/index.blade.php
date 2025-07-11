@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card p-4 mt-4">
+            <div class="card p-4 mt-4 end-content">
                 <div>
                     <table id="customerTable" class="table table-responsive">
                         <thead>
@@ -92,13 +92,13 @@
                                                 </button>
                                                 <!-- Dropdown Button -->
                                                 <!-- <button class="btn btn-sm border-0 btn-action" data-bs-toggle="dropdown"
-                                                    aria-expanded="false" title="Option">
-                                                    <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#">Option 1</a></li>
-                                                    <li><a class="dropdown-item" href="#">Option 2</a></li>
-                                                </ul> -->
+                                                                            aria-expanded="false" title="Option">
+                                                                            <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a class="dropdown-item" href="#">Option 1</a></li>
+                                                                            <li><a class="dropdown-item" href="#">Option 2</a></li>
+                                                                        </ul> -->
 
                                             </div>
                                         </td>
@@ -238,7 +238,7 @@
                     offcanvas.hide();
                 }
             @endif
-                });
+                        });
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -524,6 +524,14 @@
                 -webkit-overflow-scrolling: touch;
                 overflow-x: auto;
                 display: block;
+            }
+
+            .small {
+                display: none;
+            }
+
+            .end-content {
+                margin-bottom: 7%;
             }
         }
     </style>

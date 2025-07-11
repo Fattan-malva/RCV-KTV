@@ -2,7 +2,7 @@
 @section('title', 'Transaction List')
 @section('header_title', 'Room Transactions')
 @section('content')
-    <div class="container-content" style="margin-right: 25px;">
+    <div class="container-content">
         <div class="card p-4">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="card p-4 mt-4">
+        <div class="card p-4 mt-4 end-content">
             <!-- Tombol Print PDF -->
             <div class="button-print">
                 <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#printModal"
@@ -444,6 +444,9 @@
                 -webkit-overflow-scrolling: touch;
                 overflow-x: auto;
                 display: block;
+            }
+            .end-content {
+                margin-bottom: 7%;
             }
         }
     </style>

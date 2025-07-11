@@ -2,12 +2,16 @@
 @section('title', 'Booking List')
 @section('header_title', 'Room Transactions')
 @section('content')
-    <div class="container-content" style="margin-right: 25px;">
+    <div class="container-content">
         <div class="card p-4">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <h1>Booking List</h1>
                     <p>Manage Booking List, check-in/out, and guest information.</p>
+                    <p><strong>Checked-In:</strong> Guests who have booked have checked in <br>
+                        <strong>Expired (Check-In):</strong> Booking List has expired and the Guest has checked in <br>
+                        <strong>Expired (Unchecked-In):</strong> Booking List expired because 3 hours have passed and the guest did not check
+                        in</p>
                     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasCreateTrxRoomDetail" aria-controls="offcanvasCreateTrxRoomDetail">
                         <i class="fa-solid fa-plus"></i> Add New Booking List
@@ -21,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="card p-4 mt-4">
+        <div class="card p-4 mt-4 end-content">
             <!-- Tombol Print PDF -->
             <div class="button-print">
                 <button class="btn mb-3" data-bs-toggle="modal" data-bs-target="#printModal"
@@ -114,13 +118,8 @@
 
                                 $isExpired = $isExpiredCheckin || $isExpiredUncheckin;
                             @endphp
-                            <tr
-                                @if($isExpiredCheckin || $isExpiredUncheckin)
-                                    style="background-color: #f0f0f0; color: #aaa;"
-                                @elseif($isCheckedIn)
-                                    style="background-color: #e0ffe0; color: #1a7f37;"
-                                @endif
-                            >
+                            <tr @if($isExpiredCheckin || $isExpiredUncheckin) style="background-color: #f0f0f0; color: #aaa;"
+                            @elseif($isCheckedIn) style="background-color: #e0ffe0; color: #1a7f37;" @endif>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ \Carbon\Carbon::parse($booking->TrxDate)->format('d M Y') }}</td>
                                 <td>
@@ -799,6 +798,15 @@
                 -webkit-overflow-scrolling: touch;
                 overflow-x: auto;
                 display: block;
+            }
+
+            #showAllLogs {
+                margin-left: 0 !important;
+                margin-top: 4%;
+            }
+
+            .end-content {
+                margin-bottom: 7%;
             }
         }
     </style>

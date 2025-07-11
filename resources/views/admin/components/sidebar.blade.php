@@ -75,38 +75,6 @@
         font-weight: bold;
     }
 
-    .bottom-navbar a.active {
-        background-color: #f1f1f1;
-        border-radius: 10px;
-        color: black;
-        font-weight: bold;
-    }
-
-    @media (max-width: 768px) {
-        .bottom-navbar {
-            display: flex;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #343a40;
-            justify-content: space-around;
-            z-index: 1050;
-        }
-
-        .bottom-navbar a {
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            padding: 10px;
-            font-size: 14px;
-        }
-
-        .bottom-navbar a i {
-            font-size: 18px;
-            display: block;
-        }
-    }
 
     .sidebar .logo {
         display: flex;
@@ -229,12 +197,147 @@
         color: #b82020;
     }
 
+    /* Mobile potrait */
     @media (max-width: 768px) {
         .sidebar-logout-card-user {
             display: none;
         }
+
+        .sidebar {
+            display: none;
+        }
+
+        .bottom-navbar {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 80px;
+            background-color: white;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1050;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+
+        .bottom-navbar a {
+            flex: 1 1 0;
+            min-width: 0;
+            margin: 0px 30px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .nav-item {
+            color: #666;
+            text-align: center;
+            font-size: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-width: 0;
+            padding: 0 2px;
+            box-sizing: border-box;
+        }
+
+        .nav-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .nav-item i {
+            font-size: 28px;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .nav-text {
+            margin-top: 2px;
+            font-size: 10px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 48px;
+        }
+
+        .bottom-navbar a.active {
+            color: black;
+            font-weight: bold;
+        }
+
+        .nav-item.active {
+            color: #696cff;
+        }
+
+        .nav-item.active .nav-icon {
+            background-color: #696cff;
+            border-radius: 50%;
+            transform: translateY(-6px);
+            box-shadow: 0 2px 6px rgba(105, 108, 255, 0.2);
+            color: #fff;
+        }
+
+        .nav-item.active i {
+            color: white;
+            font-size: 26px;
+        }
+
+        .nav-item.active .nav-text {
+            font-weight: bold;
+            opacity: 1;
+            transform: translateY(2px);
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .nav-item.active .nav-icon {
+            animation: bounce 0.5s ease;
+        }
+
+        .nav-item:not(.active) {
+            opacity: 0.8;
+        }
+
+        .nav-item:not(.active):hover {
+            opacity: 1;
+        }
     }
 
+    /* Mobile Landscape */
     @media (max-width: 1024px) and (orientation: landscape) {
         #sidebar {
             max-height: 100vh;
@@ -333,10 +436,45 @@
 
 <!-- Bottom Navbar for Mobile -->
 <div class="bottom-navbar d-md-none">
-    <a href="#" class="text-white"><i class="fas fa-home"></i><br>Home</a>
-    <a href="#" class="text-white"><i class="fas fa-user"></i><br>Profile</a>
-    <a href="#" class="text-white"><i class="fas fa-cog"></i><br>Settings</a>
-    <a href="#" class="text-white"><i class="fas fa-chart-bar"></i><br>Reports</a>
+    <a href="{{ route('admin.dashboard') }}"
+        class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+        <div class="nav-icon">
+            <i class="fas fa-home"></i>
+        </div>
+        <span class="nav-text">Dashboard</span>
+    </a>
+    <a href="{{ route('admin.rooms') }}" class="nav-item {{ request()->routeIs('admin.rooms') ? 'active' : '' }}">
+        <div class="nav-icon">
+            <i class="fas fa-hotel"></i>
+        </div>
+        <span class="nav-text">Rooms</span>
+    </a>
+    <a href="{{ route('admin.rooms.booking') }}"
+        class="nav-item {{ request()->routeIs('admin.rooms.booking') ? 'active' : '' }}">
+        <div class="nav-icon">
+            <i class="fa-solid fa-list-check"></i>
+        </div>
+        <span class="nav-text">Booking</span>
+    </a>
+    <a href="{{ route('admin.rooms.detail') }}"
+        class="nav-item {{ request()->routeIs('admin.rooms.detail') ? 'active' : '' }}">
+        <div class="nav-icon">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <span class="nav-text">History</span>
+    </a>
+    @php
+        $role = session('user_role');
+    @endphp
+    @if ($role === 'superadmin' || $role === 'admin')
+        <a href="{{ route('admin.user-management') }}"
+            class="nav-item {{ request()->routeIs('admin.user-management') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <span class="nav-text">Account</span>
+        </a>
+    @endif
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

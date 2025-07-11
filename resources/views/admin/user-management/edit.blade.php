@@ -85,6 +85,45 @@
             color: white;
             border-color: #696cff;
         }
+
+        @media (max-width: 768px) {
+            .portrait-card {
+                height: auto;
+                min-height: 350px;
+                padding: 10px;
+            }
+
+            .landscape-card {
+                width: 100% !important;
+                min-height: 320px;
+                height: auto;
+                padding: 10px;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card-footer .row {
+                margin-top: 10px;
+            }
+
+            .col-md-4,
+            .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            .end-content {
+                margin-bottom: 7%;
+                margin-top: 2%;
+            }
+        }
     </style>
     <div class="row">
         <div class="col-md-4">
@@ -161,7 +200,7 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 end-content">
             <!-- Row untuk Button seperti Navbar -->
             <div class="row mb-3">
                 <div class="col d-flex justify-content-start">
@@ -169,9 +208,9 @@
                     <button class="btn nav-lanscape me-2" id="landscape1Btn"
                         onclick="setActiveButton('landscape1Btn')">Profile</button>
                     <!-- <button class="btn nav-lanscape me-2" id="landscape2Btn"
-                                                        onclick="setActiveButton('landscape2Btn')">Landscape 2</button>
-                                                    <button class="btn nav-lanscape" id="landscape3Btn" onclick="setActiveButton('landscape3Btn')">Landscape
-                                                        3</button> -->
+                                                            onclick="setActiveButton('landscape2Btn')">Landscape 2</button>
+                                                        <button class="btn nav-lanscape" id="landscape3Btn" onclick="setActiveButton('landscape3Btn')">Landscape
+                                                            3</button> -->
                 </div>
             </div>
 
